@@ -13,6 +13,7 @@ import { AuthService } from '../../../servicios/auth';
 export class Signin {
   form: any;
   mensaje = '';
+  tipoMensaje = ''; // "success", "danger", "warning"
 
   constructor(private fb: FormBuilder, private auth: AuthService) {
     this.form = this.fb.group({
@@ -23,12 +24,25 @@ export class Signin {
 
   login() {
     if (this.form.valid) {
-      this.auth.signin(this.form.value).subscribe({
-        next: () => this.mensaje = 'Inicio de sesión exitoso ✅',
-        error: () => this.mensaje = 'Credenciales incorrectas ❌'
-      });
+      // Por ahora simulamos la respuesta del servidor:
+      const { email, password } = this.form.value;
+
+      if (email === 'admin@test.com' && password === '1234') {
+        this.mensaje = 'Inicio de sesión exitoso ✅';
+        this.tipoMensaje = 'success';
+      } else {
+        this.mensaje = 'Credenciales incorrectas ❌';
+        this.tipoMensaje = 'danger';
+      }
     } else {
       this.mensaje = 'Complete los campos 🟡';
+      this.tipoMensaje = 'warning';
     }
+
+    // Ocultar el mensaje automáticamente después de 3 segundos
+    setTimeout(() => {
+      this.mensaje = '';
+      this.tipoMensaje = '';
+    }, 3000);
   }
 }

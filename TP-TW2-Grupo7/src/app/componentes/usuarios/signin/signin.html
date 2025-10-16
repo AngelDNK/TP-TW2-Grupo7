@@ -18,6 +18,14 @@
       </button>
     </form>
 
-    <p class="text-center mt-3 text-muted">{{ mensaje }}</p>
+    <div *ngIf="mensaje" class="mt-3">
+  <div class="alert" [ngClass]="{
+    'alert-success': tipoMensaje === 'success',
+    'alert-danger': tipoMensaje === 'danger',
+    'alert-warning': tipoMensaje === 'warning'
+  }" role="alert">
+    {{ mensaje }}
+  </div>
+</div>
   </div>
 </div>

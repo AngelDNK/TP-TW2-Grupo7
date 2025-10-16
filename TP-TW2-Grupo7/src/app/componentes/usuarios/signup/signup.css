@@ -1,0 +1,4 @@
+.alert {
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}

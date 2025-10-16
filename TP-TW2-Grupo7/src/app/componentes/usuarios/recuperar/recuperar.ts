@@ -13,6 +13,7 @@ import { AuthService } from '../../../servicios/auth';
 export class Recuperar {
   form: any;
   mensaje = '';
+  tipoMensaje = '';
 
   constructor(private fb: FormBuilder, private auth: AuthService) {
     this.form = this.fb.group({
@@ -21,13 +22,13 @@ export class Recuperar {
   }
 
   recuperar() {
-    if (this.form.valid) {
-      this.auth.recuperar(this.form.value.email!).subscribe({
-        next: () => this.mensaje = 'Se envió un mail de recuperación 📩',
-        error: () => this.mensaje = 'Error al enviar correo ❌'
-      });
-    } else {
-      this.mensaje = 'Ingrese un correo válido 🟡';
-    }
+   if (this.form.valid) {
+  this.mensaje = 'Se envió un mail de recuperación';
+  this.tipoMensaje = 'success';
+} else {
+  this.mensaje = 'Ingrese un correo válido';
+  this.tipoMensaje = 'warning';
+}
+setTimeout(() => { this.mensaje = ''; this.tipoMensaje = ''; }, 3000);
   }
 }

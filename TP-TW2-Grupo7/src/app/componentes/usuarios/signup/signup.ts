@@ -13,6 +13,7 @@ import { AuthService } from '../../../servicios/auth';
 export class Signup {
   form: any;
   mensaje = '';
+   tipoMensaje = '';
 
   constructor(private fb: FormBuilder, private auth: AuthService) {
     this.form = this.fb.group({
@@ -27,11 +28,15 @@ export class Signup {
   registrar() {
     if (this.form.valid) {
       this.auth.signup(this.form.value).subscribe({
-        next: () => this.mensaje = 'Usuario registrado correctamente ✅',
-        error: () => this.mensaje = 'Error al registrar ❌'
-      });
-    } else {
-      this.mensaje = 'Complete todos los campos 🟡';
+  next: () => {
+    this.mensaje = 'Usuario registrado correctamente';
+    this.tipoMensaje = 'success';
+  },
+  error: () => {
+    this.mensaje = 'Error al registrar';
+    this.tipoMensaje = 'danger';
+  }
+})
     }
   }
 }

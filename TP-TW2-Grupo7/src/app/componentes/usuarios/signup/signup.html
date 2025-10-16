@@ -1,0 +1,39 @@
+<div class="card mx-auto shadow-sm" style="max-width: 500px;">
+  <div class="card-body">
+    <h3 class="card-title text-center mb-4">Registrarse</h3>
+
+    <form [formGroup]="form" (ngSubmit)="registrar()">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label>Nombre</label>
+          <input class="form-control" formControlName="nombre">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Apellido</label>
+          <input class="form-control" formControlName="apellido">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label>Email</label>
+        <input class="form-control" formControlName="email" type="email">
+      </div>
+
+      <div class="mb-3">
+        <label>Contraseña</label>
+        <input class="form-control" formControlName="password" type="password">
+      </div>
+
+      <div class="mb-3">
+        <label>Dirección</label>
+        <input class="form-control" formControlName="direccion">
+      </div>
+
+      <button class="btn btn-success w-100" type="submit" [disabled]="form.invalid">
+        Crear cuenta
+      </button>
+    </form>
+
+    <p class="text-center mt-3 text-muted">{{ mensaje }}</p>
+  </div>
+</div>

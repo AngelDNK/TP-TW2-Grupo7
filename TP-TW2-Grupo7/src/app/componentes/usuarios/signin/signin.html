@@ -1,0 +1,23 @@
+<div class="card mx-auto shadow-sm" style="max-width: 400px;">
+  <div class="card-body">
+    <h3 class="card-title text-center mb-4">Iniciar sesión</h3>
+
+    <form [formGroup]="form" (ngSubmit)="login()">
+      <div class="mb-3">
+        <label>Email</label>
+        <input class="form-control" formControlName="email" type="email">
+      </div>
+
+      <div class="mb-3">
+        <label>Contraseña</label>
+        <input class="form-control" formControlName="password" type="password">
+      </div>
+
+      <button class="btn btn-primary w-100" type="submit" [disabled]="form.invalid">
+        Ingresar
+      </button>
+    </form>
+
+    <p class="text-center mt-3 text-muted">{{ mensaje }}</p>
+  </div>
+</div>

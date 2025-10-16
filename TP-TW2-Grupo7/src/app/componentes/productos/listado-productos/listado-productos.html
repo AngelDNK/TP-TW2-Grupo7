@@ -1,0 +1,16 @@
+<div class="container">
+  <h2>Lista de productos</h2>
+  <div class="row mt-4">
+    <div *ngFor="let p of productos" class="col-md-4 mb-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ p.nombre }}</h5>
+          <p class="card-text">{{ p.descripcion }}</p>
+          <p class="text-muted">{{ p.clasificacion }}</p>
+          <p class="fw-bold">$ {{ p.precio | number:'1.0-0' }}</p>
+          <a [routerLink]="['/producto', p.id]" class="btn btn-primary btn-sm">Ver detalle</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

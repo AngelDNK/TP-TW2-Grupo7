@@ -28,14 +28,14 @@ export class Signin {
       const { email, password } = this.form.value;
 
       if (email === 'admin@test.com' && password === '1234') {
-        this.mensaje = 'Inicio de sesión exitoso ✅';
+        this.mensaje = 'Inicio de sesión exitoso';
         this.tipoMensaje = 'success';
       } else {
-        this.mensaje = 'Credenciales incorrectas ❌';
+        this.mensaje = 'Credenciales incorrectas';
         this.tipoMensaje = 'danger';
       }
     } else {
-      this.mensaje = 'Complete los campos 🟡';
+      this.mensaje = 'Complete los campos';
       this.tipoMensaje = 'warning';
     }
 

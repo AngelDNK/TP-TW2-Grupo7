@@ -1,16 +1,27 @@
-<div class="container">
-  <h2>Lista de productos</h2>
-  <div class="row mt-4">
-    <div *ngFor="let p of productos" class="col-md-4 mb-3">
+<div class="container mt-4">
+  <h2 class="mb-4">Listado de productos</h2>
+
+  <!-- Si hay productos -->
+  <div *ngIf="productos.length > 0; else sinProductos" class="row">
+    <div *ngFor="let p of productos" class="col-md-4 mb-4">
       <div class="card shadow-sm">
         <div class="card-body">
           <h5 class="card-title">{{ p.nombre }}</h5>
-          <p class="card-text">{{ p.descripcion }}</p>
-          <p class="text-muted">{{ p.clasificacion }}</p>
-          <p class="fw-bold">$ {{ p.precio | number:'1.0-0' }}</p>
-          <a [routerLink]="['/producto', p.id]" class="btn btn-primary btn-sm">Ver detalle</a>
+          <p class="card-text text-muted">{{ p.descripcion }}</p>
+          <p><strong>Categoría:</strong> {{ p.clasificacion }}</p>
+          <p class="fw-bold text-success">$ {{ p.precio | number:'1.0-0' }}</p>
+
+          <div class="d-flex justify-content-between">
+            <a [routerLink]="['/producto', p.id]" class="btn btn-primary btn-sm">Ver detalle</a>
+            <button class="btn btn-danger btn-sm" (click)="eliminar(p.id)">Eliminar</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Si no hay productos -->
+  <ng-template #sinProductos>
+    <div class="alert alert-warning">No hay productos disponibles.</div>
+  </ng-template>
 </div>

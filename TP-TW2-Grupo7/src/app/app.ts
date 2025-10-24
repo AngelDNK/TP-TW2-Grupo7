@@ -18,9 +18,9 @@ import { CommonModule } from '@angular/common';
       </div>
     </nav>
 
-    <div class="container mt-4">
+    
       <router-outlet></router-outlet>
-    </div>
+    
   `,
   styles: [`
     .nav-link {

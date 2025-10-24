@@ -14,6 +14,8 @@ export class Signin {
   form: any;
   mensaje = '';
   tipoMensaje = ''; // "success", "danger", "warning"
+isLoading: any;
+password: any;
 
   constructor(private fb: FormBuilder, private auth: AuthService) {
     this.form = this.fb.group({

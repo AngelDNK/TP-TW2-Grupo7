@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <h2 class="mb-4">Agregar nuevo producto</h2>
+  <h2 class="mb-4">Editar producto</h2>
 
   <form [formGroup]="form" (ngSubmit)="guardar()" class="card p-4 shadow-sm">
 
@@ -23,7 +23,7 @@
       <input type="number" id="precio" class="form-control" formControlName="precio">
     </div>
 
-    <button type="submit" class="btn btn-success">Guardar producto</button>
+    <button type="submit" class="btn btn-success">Guardar cambios</button>
     <a routerLink="/productos" class="btn btn-secondary ms-2">Cancelar</a>
   </form>
 
@@ -31,7 +31,8 @@
   <div *ngIf="mensaje" class="mt-3">
     <div class="alert" [ngClass]="{
       'alert-success': tipoMensaje === 'success',
-      'alert-warning': tipoMensaje === 'warning'
+      'alert-warning': tipoMensaje === 'warning',
+      'alert-danger': tipoMensaje === 'danger'
     }" role="alert">
       {{ mensaje }}
     </div>

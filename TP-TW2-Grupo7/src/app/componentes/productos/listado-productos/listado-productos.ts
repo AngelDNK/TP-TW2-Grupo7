@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ProductosService } from '../../../servicios/productos';
 import { Producto } from '../../../modelos/producto';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-listado-productos',
@@ -10,10 +11,27 @@ import { Producto } from '../../../modelos/producto';
   templateUrl: './listado-productos.html',
   styleUrls: ['./listado-productos.css']
 })
-export class ListadoProductos {
-  productos: Producto[] = [
-    { id: 1, nombre: 'Auriculares Gamer', descripcion: 'Con luces RGB', clasificacion: 'Tecnología', precio: 25000 },
-    { id: 2, nombre: 'Teclado Mecánico', descripcion: 'Switch Blue', clasificacion: 'Tecnología', precio: 30000 },
-    { id: 3, nombre: 'Mouse Inalámbrico', descripcion: 'Sensor óptico', clasificacion: 'Accesorios', precio: 15000 },
-  ];
+export class ListadoProductos implements OnInit {
+  productos: Producto[] = [];
+
+  constructor(private productosService: ProductosService) {}
+
+  ngOnInit(): void {
+    this.cargarProductos();
+  }
+
+  cargarProductos() {
+    this.productosService.listar().subscribe((data) => {
+      this.productos = data;
+    });
+  }
+
+  eliminar(id?: number) {
+    if (!id) return;
+    if (confirm('¿Seguro que querés eliminar este producto?')) {
+      this.productosService.eliminar(id).subscribe(() => {
+        this.cargarProductos(); // recarga la lista
+      });
+    }
+  }
 }

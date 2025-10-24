@@ -10,6 +10,8 @@ import { Recuperar } from './componentes/usuarios/recuperar/recuperar';
 import { ListadoProductos } from './componentes/productos/listado-productos/listado-productos';
 import { DetalleProducto } from './componentes/productos/detalle-producto/detalle-producto';
 import { NuevoProducto } from './componentes/productos/nuevo-producto/nuevo-producto';
+import {EditarProducto} from './componentes/productos/editar-producto/editar-producto'
+
 
 
 export const routes: Routes = [
@@ -19,5 +21,6 @@ export const routes: Routes = [
      { path: 'recuperar', component: Recuperar},
      { path: 'productos', component: ListadoProductos},
      { path: 'producto/:id', component: DetalleProducto},
-     { path: 'nuevo-producto', component: NuevoProducto}
+     { path: 'nuevo-producto', component: NuevoProducto},
+     { path: 'editar-producto', component: EditarProducto}
 ];

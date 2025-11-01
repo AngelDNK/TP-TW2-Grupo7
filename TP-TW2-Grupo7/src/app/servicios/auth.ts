@@ -2,21 +2,27 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
-export class AuthService {
-  private API_URL = 'http://localhost:4200/api/usuarios';
+// URL base del backend
+const API_URL = 'http://localhost:3000/api/auth';
 
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
   constructor(private http: HttpClient) {}
 
-  signup(datos: any): Observable<any> {
-    return this.http.post(`${this.API_URL}/signup`, datos);
+  // 🔹 LOGIN
+  login(data: { email: string; password: string }): Observable<any> {
+    return this.http.post(`${API_URL}/signin`, data);
   }
 
-  signin(datos: any): Observable<any> {
-    return this.http.post(`${this.API_URL}/signin`, datos);
+  // 🔹 REGISTRO
+  signup(data: { nombre: string; email: string; password: string }): Observable<any> {
+    return this.http.post(`${API_URL}/signup`, data);
   }
 
-  recuperar(email: string): Observable<any> {
-    return this.http.post(`${this.API_URL}/recuperar`, { email });
+  // 🔹 RECUPERAR CONTRASEÑA
+  recuperar(data: { email: string }): Observable<any> {
+    return this.http.post(`${API_URL}/recuperar`, data);
   }
 }

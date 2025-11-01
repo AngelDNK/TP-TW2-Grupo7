@@ -22,13 +22,28 @@ export class Recuperar {
   }
 
   recuperar() {
-   if (this.form.valid) {
-  this.mensaje = 'Se envió un mail de recuperación';
-  this.tipoMensaje = 'success';
-} else {
-  this.mensaje = 'Ingrese un correo válido';
-  this.tipoMensaje = 'warning';
-}
-setTimeout(() => { this.mensaje = ''; this.tipoMensaje = ''; }, 3000);
+    if (this.form.valid) {
+      const { email } = this.form.value;
+
+      this.auth.recuperar({ email }).subscribe({
+        next: (res) => {
+          this.mensaje = res.message || 'Correo de recuperación enviado';
+          this.tipoMensaje = 'success';
+        },
+        error: (err) => {
+          console.error(err);
+          this.mensaje = err.error?.message || 'Error al recuperar contraseña';
+          this.tipoMensaje = 'danger';
+        }
+      });
+    } else {
+      this.mensaje = 'Ingrese un email válido';
+      this.tipoMensaje = 'warning';
+    }
+
+    setTimeout(() => {
+      this.mensaje = '';
+      this.tipoMensaje = '';
+    }, 3000);
   }
 }

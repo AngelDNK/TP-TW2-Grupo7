@@ -25,26 +25,28 @@ password: any;
   }
 
   login() {
-    if (this.form.valid) {
-      // Por ahora simulamos la respuesta del servidor:
-      const { email, password } = this.form.value;
+  if (this.form.valid) {
+    const { email, password } = this.form.value;
 
-      if (email === 'admin@test.com' && password === '1234') {
-        this.mensaje = 'Inicio de sesión exitoso';
+    this.auth.login({ email, password }).subscribe({
+      next: (res) => {
+        this.mensaje = res.message || 'Inicio de sesión exitoso';
         this.tipoMensaje = 'success';
-      } else {
-        this.mensaje = 'Credenciales incorrectas';
+      },
+      error: (err) => {
+        console.error(err);
+        this.mensaje = err.error?.message || 'Error al iniciar sesión';
         this.tipoMensaje = 'danger';
       }
-    } else {
-      this.mensaje = 'Complete los campos';
-      this.tipoMensaje = 'warning';
-    }
-
-    // Ocultar el mensaje automáticamente después de 3 segundos
-    setTimeout(() => {
-      this.mensaje = '';
-      this.tipoMensaje = '';
-    }, 3000);
+    });
+  } else {
+    this.mensaje = 'Complete los campos correctamente';
+    this.tipoMensaje = 'warning';
   }
+
+  setTimeout(() => {
+    this.mensaje = '';
+    this.tipoMensaje = '';
+  }, 3000);
+}
 }

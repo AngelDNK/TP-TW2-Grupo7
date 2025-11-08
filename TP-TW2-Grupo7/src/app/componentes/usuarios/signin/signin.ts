@@ -38,23 +38,26 @@ export class Signin {
     this.isLoading = true;
     const { email, password } = this.form.value;
 
-    // 🔹 Llamada al servicio con tipado fuerte
+    // 🔹 Llamada al servicio
     this.auth.login({ email, password }).subscribe({
       next: (res: AuthResponse) => {
         this.isLoading = false;
         this.mensaje = res.message || 'Inicio de sesión exitoso';
         this.tipoMensaje = 'success';
 
-        if (res.user) {
-          // ✅ Guardar usuario logueado en localStorage
+        // ✅ Validación segura con encadenamiento opcional
+        if (res?.user) {
+          // Guardar usuario logueado en localStorage
           localStorage.setItem('usuario', JSON.stringify(res.user));
 
-          // ✅ Redirigir según el rol
-          if (res.user.rol === 'admin') {
-            this.router.navigate(['/productos']);
-          } else {
-            this.router.navigate(['/carrito']); // lo agregaremos después
-          }
+          // 🔹 Mostrar mensaje breve y redirigir según el rol
+          setTimeout(() => {
+            if (res.user?.rol === 'admin') {
+              this.router.navigate(['/productos']);
+            } else {
+              this.router.navigate(['/carrito']); // se agregará luego
+            }
+          }, 1500);
         }
       },
       error: (err: any) => {
@@ -65,10 +68,10 @@ export class Signin {
       }
     });
 
-    // 🔹 Limpieza automática del mensaje
+    // 🔹 Limpieza del mensaje luego de unos segundos
     setTimeout(() => {
       this.mensaje = '';
       this.tipoMensaje = '';
-    }, 3000);
+    }, 4000);
   }
 }

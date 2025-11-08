@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../servicios/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -15,7 +16,11 @@ export class Signup {
   mensaje = '';
   tipoMensaje = '';
 
-  constructor(private fb: FormBuilder, private auth: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) {
     this.form = this.fb.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
@@ -39,6 +44,14 @@ export class Signup {
         next: (res) => {
           this.mensaje = res.message || 'Usuario registrado correctamente';
           this.tipoMensaje = 'success';
+
+          // ✅ Limpiar formulario
+          this.form.reset();
+
+          // ✅ Redirigir al login después de 2 segundos
+          setTimeout(() => {
+            this.router.navigate(['/signin']);
+          }, 2000);
         },
         error: (err) => {
           console.error(err);
@@ -59,6 +72,6 @@ export class Signup {
     setTimeout(() => {
       this.mensaje = '';
       this.tipoMensaje = '';
-    }, 3000);
+    }, 4000);
   }
 }

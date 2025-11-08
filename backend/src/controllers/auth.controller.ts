@@ -34,6 +34,8 @@ export const AuthController = {
 
   // 🔹 Registrar usuario
   signup: async (req: Request, res: Response) => {
+    console.log("entro pa");
+
     try {
       const { nombre, apellido, direccion, email, password } = req.body;
 

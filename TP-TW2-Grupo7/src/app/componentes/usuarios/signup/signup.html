@@ -6,7 +6,17 @@
       <form [formGroup]="form" (ngSubmit)="registrar()">
         <div class="mb-3">
           <label class="form-label">Nombre</label>
-          <input class="form-control" formControlName="nombre" type="text" placeholder="Tu nombre completo">
+          <input class="form-control" formControlName="nombre" type="text" placeholder="Tu nombre">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Apellido</label>
+          <input class="form-control" formControlName="apellido" type="text" placeholder="Tu apellido">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Dirección</label>
+          <input class="form-control" formControlName="direccion" type="text" placeholder="Tu dirección">
         </div>
 
         <div class="mb-3">
@@ -17,6 +27,9 @@
         <div class="mb-3">
           <label class="form-label">Contraseña</label>
           <input class="form-control" formControlName="password" type="password" placeholder="••••••••">
+          <small class="text-muted">
+            La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
+          </small>
         </div>
 
         <button class="btn btn-success w-100" type="submit" [disabled]="form.invalid">

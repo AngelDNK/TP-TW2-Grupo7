@@ -18,16 +18,24 @@ export class Signup {
   constructor(private fb: FormBuilder, private auth: AuthService) {
     this.form = this.fb.group({
       nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      direccion: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)
+        ]
+      ]
     });
   }
 
   registrar() {
     if (this.form.valid) {
-      const { nombre, email, password } = this.form.value;
+      const { nombre, apellido, direccion, email, password } = this.form.value;
 
-      this.auth.signup({ nombre, email, password }).subscribe({
+      this.auth.signup({ nombre, apellido, direccion, email, password }).subscribe({
         next: (res) => {
           this.mensaje = res.message || 'Usuario registrado correctamente';
           this.tipoMensaje = 'success';
@@ -39,7 +47,12 @@ export class Signup {
         }
       });
     } else {
-      this.mensaje = 'Complete todos los campos correctamente';
+      if (this.form.controls['password'].errors?.['pattern']) {
+        this.mensaje =
+          'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.';
+      } else {
+        this.mensaje = 'Complete todos los campos correctamente.';
+      }
       this.tipoMensaje = 'warning';
     }
 

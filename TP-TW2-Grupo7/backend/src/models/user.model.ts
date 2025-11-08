@@ -1,11 +1,54 @@
-export interface User {
-  id: number;
-  nombre: string;
-  email: string;
-  password: string;
+import { DataTypes, Model } from 'sequelize';
+import { sequelize } from '../database/db';
+
+export class User extends Model {
+  public id!: number;
+  public nombre!: string;
+  public apellido!: string;
+  public direccion!: string;
+  public email!: string;
+  public password!: string;
+  public rol!: 'admin' | 'cliente';
 }
 
-// Simulación de base de datos temporal
-export const users: User[] = [
-  { id: 1, nombre: 'Admin', email: 'admin@test.com', password: '1234' }
-];
+User.init(
+  {
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    apellido: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    direccion: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    rol: {
+      type: DataTypes.ENUM('admin', 'cliente'),
+      allowNull: false,
+      defaultValue: 'cliente' // 👈 importante
+    }
+  },
+  {
+    sequelize,
+    modelName: 'User',
+    tableName: 'usuarios',
+    timestamps: false
+  }
+);

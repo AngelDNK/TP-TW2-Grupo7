@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ProductosService } from '../../../servicios/productos';
 import { Producto } from '../../../modelos/producto';
 import { RouterLink } from "@angular/router";
+import { AuthService } from '../../../servicios/auth';
+import { CarritoService } from '../../../servicios/carrito';
 
 @Component({
   selector: 'app-listado-productos',
@@ -13,8 +15,9 @@ import { RouterLink } from "@angular/router";
 })
 export class ListadoProductos implements OnInit {
   productos: Producto[] = [];
+  esUsuarioAdmin = false;
 
-  constructor(private productosService: ProductosService) {}
+   constructor(private productosService: ProductosService, public authService: AuthService, private carritoService: CarritoService) { }
 
   ngOnInit(): void {
     this.cargarProductos();
@@ -25,6 +28,12 @@ export class ListadoProductos implements OnInit {
       this.productos = data;
     });
   }
+
+agregarAlCarrito(producto: Producto) {
+    this.carritoService.agregarProducto(producto);
+    alert('¡Producto agregado al carrito!'); // O un toast/snackbar
+  }
+
 
   eliminar(id?: number) {
     if (!id) return;

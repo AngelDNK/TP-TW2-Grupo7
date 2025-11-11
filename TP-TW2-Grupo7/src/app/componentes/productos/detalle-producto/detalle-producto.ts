@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductosService } from '../../../servicios/productos';
 import { Producto } from '../../../modelos/producto';
+import { CarritoService } from '../../../servicios/carrito';
 import { AuthService } from '../../../servicios/auth';
 
 @Component({
@@ -18,7 +19,8 @@ export class DetalleProducto implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productosService: ProductosService,
-    public authService: AuthService
+    public authService: AuthService,
+    private carritoService: CarritoService
   ) { }
 
   ngOnInit(): void {
@@ -26,5 +28,10 @@ export class DetalleProducto implements OnInit {
     this.productosService.obtenerPorId(id).subscribe((data) => {
       this.producto = data;
     });
+  }
+
+  agregarAlCarrito(producto: Producto): void {
+    this.carritoService.agregarProducto(producto);
+    alert('¡Producto agregado al carrito!');
   }
 }

@@ -13,7 +13,15 @@
 
           <div class="d-flex justify-content-between">
             <a [routerLink]="['/producto', p.id]" class="btn btn-primary btn-sm">Ver detalle</a>
-            <button class="btn btn-danger btn-sm" (click)="eliminar(p.id)">Eliminar</button>
+
+               <button *ngIf="authService.esAdmin()" class="btn btn-danger btn-sm" (click)="eliminar(p.id)">
+              Eliminar
+            </button>
+
+             <button *ngIf="authService.esCliente()" class="btn btn-success btn-sm" (click)="agregarAlCarrito(p)">
+              Agregar al carrito
+            </button>
+
           </div>
         </div>
       </div>

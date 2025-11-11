@@ -1,0 +1,49 @@
+<div class="container mt-4">
+  <h2>🛒 Tu Carrito de Compras</h2>
+
+  <div *ngIf="(items$ | async) as items; else carritoVacio">
+    <div *ngIf="items.length > 0; else carritoVacio">
+      <table class="table align-middle mt-3">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td>{{ item.producto.nombre }}</td>
+            <td>{{ item.producto.precio | currency:'$' }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ (item.producto.precio * item.cantidad) | currency:'$' }}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="eliminar(item.producto.id!)">
+                Quitar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr>
+
+      <div class="d-flex justify-content-end">
+        <h3 class="me-3">Total: {{ total$ | async | currency:'$' }}</h3>
+        <button class="btn btn-success" (click)="simularCompra()">
+          Simular Compra
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <ng-template #carritoVacio>
+    <div class="alert alert-info mt-3">
+      Tu carrito está vacío.
+      <a routerLink="/productos" class="alert-link ms-2">Ver productos</a>
+    </div>
+  </ng-template>
+</div>

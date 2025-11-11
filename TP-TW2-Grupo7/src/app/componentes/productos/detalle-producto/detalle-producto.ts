@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductosService } from '../../../servicios/productos';
 import { Producto } from '../../../modelos/producto';
+import { AuthService } from '../../../servicios/auth';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -16,8 +17,9 @@ export class DetalleProducto implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productosService: ProductosService
-  ) {}
+    private productosService: ProductosService,
+    public authService: AuthService
+  ) { }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));

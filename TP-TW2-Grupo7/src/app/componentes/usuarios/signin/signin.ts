@@ -50,13 +50,18 @@ export class Signin {
           // Guardar usuario logueado en localStorage
           localStorage.setItem('usuario', JSON.stringify(res.user));
 
-          // 🔹 Mostrar mensaje breve y redirigir según el rol
+          /* asi estaba antes, ya se agrego condicional en vista productos
+           🔹 Mostrar mensaje breve y redirigir según el rol
           setTimeout(() => {
             if (res.user?.rol === 'admin') {
               this.router.navigate(['/productos']);
             } else {
-              this.router.navigate(['/carrito']); // se agregará luego
+              this.router.navigate(['/carrito']);
             }
+          }, 1500);
+*/
+          setTimeout(() => {
+              this.router.navigate(['/productos']);
           }, 1500);
         }
       },

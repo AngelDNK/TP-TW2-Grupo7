@@ -7,16 +7,16 @@
     <p><strong>Clasificación:</strong> {{ producto.clasificacion }}</p>
     <p><strong>Precio:</strong> $ {{ producto.precio | number:'1.0-0' }}</p>
   </div>
-  <a routerLink="/editar-producto" class="btn btn-secondary">Editar</a>
+  <a *ngIf="authService.esAdmin()" routerLink="/editar-producto" class="btn btn-secondary">Editar</a>
   <a routerLink="/productos" class="btn btn-secondary mt-3">Volver al listado</a>
 </div>
 
 <ng-template #noEncontrado>
   <div class="container mt-4">
     <div class="alert alert-danger">
-      Producto no encontrado 
+      Producto no encontrado
     </div>
     <a routerLink="/productos" class="btn btn-secondary">Volver</a>
-    
+
   </div>
 </ng-template>

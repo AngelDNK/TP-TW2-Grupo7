@@ -40,4 +40,30 @@ export class AuthService {
   recuperar(data: { email: string }): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${API_URL}/recuperar`, data);
   }
+
+  obtenerUsuarioLogueado(): User | null {
+    if (typeof window === 'undefined') return null;
+
+    const usuarioStorage = localStorage.getItem('usuario');
+    if (usuarioStorage) {
+      return JSON.parse(usuarioStorage) as User;
+    }
+    return null;
+  }
+
+  esAdmin(): boolean {
+    const usuario = this.obtenerUsuarioLogueado();
+    return usuario ? usuario.rol === 'admin' : false;
+  }
+
+  esCliente(): boolean {
+    const usuario = this.obtenerUsuarioLogueado();
+    return usuario ? usuario.rol === 'cliente' : false;
+  }
+
+
+  logout(): void {
+    localStorage.removeItem('usuario');
+
+  }
 }

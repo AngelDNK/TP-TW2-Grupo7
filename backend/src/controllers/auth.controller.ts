@@ -24,22 +24,22 @@ export const AuthController = {
           id: user.id,
           nombre: user.nombre,
           apellido: user.apellido,
-          rol: user.rol
+          direccion: user.direccion,
+          email: user.email
         }
       });
     } catch (error) {
+      console.error('❌ Error en signin:', error);
       res.status(500).json({ message: 'Error del servidor' });
     }
   },
 
   // 🔹 Registrar usuario
   signup: async (req: Request, res: Response) => {
-    console.log("entro pa");
-
     try {
       const { nombre, apellido, direccion, email, password } = req.body;
 
-      // Validar complejidad mínima (mayúscula, minúscula, número, 8+ caracteres)
+      // Validar complejidad mínima
       const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
       if (!regex.test(password)) {
         return res.status(400).json({
@@ -48,6 +48,7 @@ export const AuthController = {
         });
       }
 
+      // Verificar si ya existe
       const existente = await User.findOne({ where: { email } });
       if (existente) {
         return res.status(400).json({ message: 'El usuario ya existe' });
@@ -60,18 +61,18 @@ export const AuthController = {
         apellido,
         direccion,
         email,
-        password: passwordHash,
-        rol: 'cliente'
+        password: passwordHash
       });
 
-      console.log('✅ Usuario cliente registrado:', nuevo.email);
+      console.log('✅ Usuario registrado:', nuevo.email);
       res.status(201).json({
         message: 'Usuario registrado exitosamente',
         user: {
           id: nuevo.id,
           nombre: nuevo.nombre,
           apellido: nuevo.apellido,
-          rol: nuevo.rol
+          direccion: nuevo.direccion,
+          email: nuevo.email
         }
       });
     } catch (error) {

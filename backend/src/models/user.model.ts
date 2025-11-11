@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../database/db';
 
 export class User extends Model {
@@ -8,7 +8,6 @@ export class User extends Model {
   public direccion!: string;
   public email!: string;
   public password!: string;
-  public rol!: 'admin' | 'cliente';
 }
 
 User.init(
@@ -38,11 +37,6 @@ User.init(
     password: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    rol: {
-      type: DataTypes.ENUM('admin', 'cliente'),
-      allowNull: false,
-      defaultValue: 'cliente' // 👈 importante
     }
   },
   {

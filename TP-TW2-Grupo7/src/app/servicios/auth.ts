@@ -5,14 +5,13 @@ import { Observable } from 'rxjs';
 // 🌐 URL base del backend
 const API_URL = 'http://localhost:3000/api/auth';
 
-// 🧩 Interfaces para tipar correctamente
+// 🧩 Interfaces actualizadas según el nuevo modelo
 export interface User {
   id: number;
   nombre: string;
   apellido: string;
   direccion: string;
   email: string;
-  rol: 'admin' | 'cliente';
 }
 
 export interface AuthResponse {
@@ -39,5 +38,16 @@ export class AuthService {
   // 🔹 RECUPERAR CONTRASEÑA
   recuperar(data: { email: string }): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${API_URL}/recuperar`, data);
+  }
+
+  // 🔹 Obtener usuario logueado desde localStorage
+  getUsuarioActual(): User | null {
+    const userData = localStorage.getItem('usuario');
+    return userData ? JSON.parse(userData) as User : null;
+  }
+
+  // 🔹 Cerrar sesión
+  logout(): void {
+    localStorage.removeItem('usuario');
   }
 }

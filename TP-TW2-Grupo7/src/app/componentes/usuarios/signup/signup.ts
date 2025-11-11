@@ -1,20 +1,25 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../servicios/auth';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink // 👈 agregado para que funcione el enlace a /signin
+  ],
   templateUrl: './signup.html',
   styleUrls: ['./signup.css']
 })
 export class Signup {
-  form: any;
+  form: FormGroup;
   mensaje = '';
   tipoMensaje = '';
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -36,30 +41,8 @@ export class Signup {
     });
   }
 
-  registrar() {
-    if (this.form.valid) {
-      const { nombre, apellido, direccion, email, password } = this.form.value;
-
-      this.auth.signup({ nombre, apellido, direccion, email, password }).subscribe({
-        next: (res) => {
-          this.mensaje = res.message || 'Usuario registrado correctamente';
-          this.tipoMensaje = 'success';
-
-          // ✅ Limpiar formulario
-          this.form.reset();
-
-          // ✅ Redirigir al login después de 2 segundos
-          setTimeout(() => {
-            this.router.navigate(['/signin']);
-          }, 2000);
-        },
-        error: (err) => {
-          console.error(err);
-          this.mensaje = err.error?.message || 'Error al registrar usuario';
-          this.tipoMensaje = 'danger';
-        }
-      });
-    } else {
+  registrar(): void {
+    if (this.form.invalid) {
       if (this.form.controls['password'].errors?.['pattern']) {
         this.mensaje =
           'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.';
@@ -67,8 +50,35 @@ export class Signup {
         this.mensaje = 'Complete todos los campos correctamente.';
       }
       this.tipoMensaje = 'warning';
+      return;
     }
 
+    this.isLoading = true;
+    const { nombre, apellido, direccion, email, password } = this.form.value;
+
+    this.auth.signup({ nombre, apellido, direccion, email, password }).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        this.mensaje = res.message || 'Usuario registrado correctamente';
+        this.tipoMensaje = 'success';
+
+        // ✅ Limpiar formulario
+        this.form.reset();
+
+        // ✅ Redirigir al login después de un breve mensaje
+        setTimeout(() => {
+          this.router.navigate(['/signin']);
+        }, 2000);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error(err);
+        this.mensaje = err.error?.message || 'Error al registrar usuario';
+        this.tipoMensaje = 'danger';
+      }
+    });
+
+    // 🔹 Limpiar mensajes después de unos segundos
     setTimeout(() => {
       this.mensaje = '';
       this.tipoMensaje = '';

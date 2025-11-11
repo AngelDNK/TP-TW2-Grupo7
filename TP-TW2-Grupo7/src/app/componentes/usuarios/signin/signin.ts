@@ -1,13 +1,19 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService, AuthResponse } from '../../../servicios/auth';
+
 
 @Component({
   selector: 'app-signin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+     
+  ],
   templateUrl: './signin.html',
   styleUrls: ['./signin.css']
 })
@@ -38,26 +44,18 @@ export class Signin {
     this.isLoading = true;
     const { email, password } = this.form.value;
 
-    // 🔹 Llamada al servicio
     this.auth.login({ email, password }).subscribe({
       next: (res: AuthResponse) => {
         this.isLoading = false;
         this.mensaje = res.message || 'Inicio de sesión exitoso';
         this.tipoMensaje = 'success';
 
-        // ✅ Validación segura con encadenamiento opcional
         if (res?.user) {
-          // Guardar usuario logueado en localStorage
+          // ✅ Guardar usuario logueado
           localStorage.setItem('usuario', JSON.stringify(res.user));
 
-          // 🔹 Mostrar mensaje breve y redirigir según el rol
-          setTimeout(() => {
-            if (res.user?.rol === 'admin') {
-              this.router.navigate(['/productos']);
-            } else {
-              this.router.navigate(['/carrito']); // se agregará luego
-            }
-          }, 1500);
+          // 🔹 Redirigir a productos
+          setTimeout(() => this.router.navigate(['/productos']), 1200);
         }
       },
       error: (err: any) => {
@@ -68,7 +66,6 @@ export class Signin {
       }
     });
 
-    // 🔹 Limpieza del mensaje luego de unos segundos
     setTimeout(() => {
       this.mensaje = '';
       this.tipoMensaje = '';

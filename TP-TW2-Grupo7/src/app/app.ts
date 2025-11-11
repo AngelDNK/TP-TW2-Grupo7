@@ -1,36 +1,44 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule],
+  imports: [RouterOutlet, CommonModule,],
   template: `
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container">
-        <a class="navbar-brand fw-bold" routerLink="/">TP Taller Web 2 - Grupo 7</a>
-        <div class="d-flex">
-          <a routerLink="/signin" class="nav-link text-white">Iniciar sesión</a>
-          <a routerLink="/signup" class="nav-link text-white">Registrarse</a>
-          <a routerLink="/recuperar" class="nav-link text-white">Recuperar contraseña</a>
-        </div>
-      </div>
-    </nav>
 
-    
-      <router-outlet></router-outlet>
-    
+    <router-outlet></router-outlet>
+
+    <footer class="footer bg-dark text-light text-center py-3 mt-auto">
+      <div class="container">
+        <p class="mb-1 fw-bold">TP Taller Web 2 - Grupo 7</p>
+        <p class="mb-0">Integrantes:</p>
+        <small>
+          BARREGO, LEANDRO EZEQUIEL |
+          DANGELO, AGUSTIN ELIAN |
+          DIAZ, DAMIAN VALENTIN |
+          DI ROCCO DEL GIUDICE, GIULIANA |
+          LEYES DELVALLE, ANGEL ANTONIO |
+          PIEDRAFITA, SANTIAGO TOMÁS
+        </small>
+      </div>
+    </footer>
   `,
   styles: [`
-    .nav-link {
-      margin-left: 15px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .nav-link:hover {
-      text-decoration: underline;
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
     }
   `]
 })
-export class App {}
+export class App {
+  constructor(private router: Router) {}
+
+  irSignup() {
+    console.log('➡️ Intentando navegar a /signup');
+    this.router.navigate(['/signup']);
+  }
+}

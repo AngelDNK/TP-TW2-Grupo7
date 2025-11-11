@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Producto } from '../modelos/producto'; //
+import { Producto } from '../modelos/producto';
 
 export interface ItemCarrito {
   producto: Producto;
@@ -14,12 +14,18 @@ export interface ItemCarrito {
 export class CarritoService {
   private itemsSubject = new BehaviorSubject<ItemCarrito[]>([]);
   public items$ = this.itemsSubject.asObservable();
+public totalItems$: Observable<number>;
+
 
   constructor() {
     const carritoGuardado = localStorage.getItem('carrito');
     if (carritoGuardado) {
       this.itemsSubject.next(JSON.parse(carritoGuardado));
     }
+
+    this.totalItems$ = this.items$.pipe(
+      map(items => items.reduce((total, item) => total + item.cantidad, 0))
+    );
   }
 
   agregarProducto(producto: Producto): void {
@@ -34,6 +40,22 @@ export class CarritoService {
 
     this.itemsSubject.next([...itemsActuales]);
     this.guardarEnLocalStorage();
+  }
+
+restarProducto(idProducto: number): void {
+    const itemsActuales = this.itemsSubject.getValue();
+    const itemExistente = itemsActuales.find(i => i.producto.id === idProducto);
+
+    if (itemExistente) {
+      itemExistente.cantidad--;
+
+      if (itemExistente.cantidad === 0) {
+        this.eliminarItem(idProducto);
+      } else {
+        this.itemsSubject.next([...itemsActuales]);
+        this.guardarEnLocalStorage();
+      }
+    }
   }
 
   eliminarItem(idProducto: number): void {

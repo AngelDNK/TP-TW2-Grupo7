@@ -3,6 +3,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { CarritoService, ItemCarrito } from '../../servicios/carrito';
 import { RouterLink } from '@angular/router';
+import { Producto } from '../../modelos/producto';
 
 @Component({
   selector: 'app-carrito',
@@ -20,7 +21,15 @@ export class CarritoComponent implements OnInit {
     this.total$ = this.carritoService.calcularTotal();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
+
+  incrementar(producto: Producto) {
+    this.carritoService.agregarProducto(producto);
+  }
+
+  decrementar(idProducto: number) {
+    this.carritoService.restarProducto(idProducto);
+  }
 
   eliminar(idProducto: number) {
     this.carritoService.eliminarItem(idProducto);

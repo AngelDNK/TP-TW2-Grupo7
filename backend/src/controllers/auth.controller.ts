@@ -1,6 +1,12 @@
 import { Request, Response } from 'express';
 import { User } from '../models/user.model';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+import { sendRecoveryEmail } from '../utils/emailHelper';
+
+// Mapa temporal en memoria para guardar tokens de recuperación
+// (⚠️ en producción deberías usar una tabla o Redis)
+const passwordResetTokens = new Map<string, string>();
 
 export const AuthController = {
   // 🔹 Iniciar sesión
@@ -39,7 +45,6 @@ export const AuthController = {
     try {
       const { nombre, apellido, direccion, email, password } = req.body;
 
-      // Validar complejidad mínima
       const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
       if (!regex.test(password)) {
         return res.status(400).json({
@@ -48,7 +53,6 @@ export const AuthController = {
         });
       }
 
-      // Verificar si ya existe
       const existente = await User.findOne({ where: { email } });
       if (existente) {
         return res.status(400).json({ message: 'El usuario ya existe' });
@@ -81,23 +85,64 @@ export const AuthController = {
     }
   },
 
-  // 🔹 Recuperar contraseña
+  // 🔹 Recuperar contraseña (envía correo real)
   recuperar: async (req: Request, res: Response) => {
     try {
       const { email } = req.body;
-      console.log(`📧 [POST] /recuperar — email: ${email}`);
-
       const user = await User.findOne({ where: { email } });
 
       if (!user) {
-        console.log('❌ Correo no encontrado');
         return res.status(404).json({ message: 'Correo no encontrado' });
       }
 
-      console.log('📨 Simulación de envío de correo:', email);
-      res.json({ message: 'Correo de recuperación enviado (simulado)' });
+      // Generar token temporal
+      const token = crypto.randomBytes(32).toString('hex');
+
+      // Guardar el token asociado al usuario (en memoria)
+      passwordResetTokens.set(token, email);
+
+      // Enviar email real
+      await sendRecoveryEmail(email, token);
+
+      console.log(`📨 Token generado para ${email}: ${token}`);
+
+      res.json({ message: 'Correo de recuperación enviado con éxito' });
     } catch (error) {
       console.error('❌ Error en recuperar:', error);
+      res.status(500).json({ message: 'Error del servidor' });
+    }
+  },
+
+  // 🔹 Cambiar contraseña con token
+  resetPassword: async (req: Request, res: Response) => {
+    try {
+      const { token, nuevaPassword } = req.body;
+
+      if (!token || !nuevaPassword) {
+        return res.status(400).json({ message: 'Datos incompletos' });
+      }
+
+      const email = passwordResetTokens.get(token);
+      if (!email) {
+        return res.status(400).json({ message: 'Token inválido o expirado' });
+      }
+
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+
+      const hash = await bcrypt.hash(nuevaPassword, 10);
+      user.password = hash;
+      await user.save();
+
+      // Borrar token luego del uso
+      passwordResetTokens.delete(token);
+
+      console.log(`🔐 Contraseña cambiada para ${email}`);
+      res.json({ message: 'Contraseña restablecida exitosamente' });
+    } catch (error) {
+      console.error('❌ Error en resetPassword:', error);
       res.status(500).json({ message: 'Error del servidor' });
     }
   }

@@ -1,6 +1,28 @@
 <div class="container mt-4">
   <h2 class="mb-4">Listado de productos</h2>
 
+  <!-- 🧠 FILTROS -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <label for="categoria" class="form-label fw-bold">Filtrar por categoría</label>
+      <select id="categoria" class="form-select" [(ngModel)]="categoriaSeleccionada" (change)="aplicarFiltros()">
+        <option value="">Todas</option>
+        <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <label for="precioMax" class="form-label fw-bold">Hasta qué precio ($)</label>
+      <input
+        id="precioMax"
+        type="number"
+        class="form-control"
+        [(ngModel)]="precioMax"
+        (input)="aplicarFiltros()"
+        placeholder="Ej: 5000"
+      />
+    </div>
+  </div>
   <!-- Si hay productos -->
   <div *ngIf="productos.length > 0; else sinProductos" class="row">
     <div *ngFor="let p of productos" class="col-md-4 mb-4">

@@ -5,7 +5,12 @@
   <div class="row mb-4">
     <div class="col-md-4">
       <label for="categoria" class="form-label fw-bold">Filtrar por categoría</label>
-      <select id="categoria" class="form-select" [(ngModel)]="categoriaSeleccionada" (change)="aplicarFiltros()">
+      <select
+        id="categoria"
+        class="form-select"
+        [(ngModel)]="categoriaSeleccionada"
+        (change)="aplicarFiltros()"
+      >
         <option value="">Todas</option>
         <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
       </select>
@@ -31,19 +36,26 @@
           <h5 class="card-title">{{ p.nombre }}</h5>
           <p class="card-text text-muted">{{ p.descripcion }}</p>
           <p><strong>Categoría:</strong> {{ p.clasificacion }}</p>
-          <p class="fw-bold text-success">$ {{ p.precio | number:'1.0-0' }}</p>
+          <p class="fw-bold text-success">$ {{ p.precio | number : '1.0-0' }}</p>
 
           <div class="d-flex justify-content-between">
             <a [routerLink]="['/producto', p.id]" class="btn btn-primary btn-sm">Ver detalle</a>
 
-               <button *ngIf="authService.esAdmin()" class="btn btn-danger btn-sm" (click)="eliminar(p.id)">
+            <button
+              *ngIf="authService.esAdmin()"
+              class="btn btn-danger btn-sm"
+              (click)="eliminar(p.id)"
+            >
               Eliminar
             </button>
 
-             <button *ngIf="authService.esCliente()" class="btn btn-success btn-sm" (click)="agregarAlCarrito(p)">
+            <button
+              *ngIf="authService.esCliente()"
+              class="btn btn-success btn-sm"
+              (click)="agregarAlCarrito(p)"
+            >
               Agregar al carrito
             </button>
-
           </div>
         </div>
       </div>

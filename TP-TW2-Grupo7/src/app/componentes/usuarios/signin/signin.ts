@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { AuthService, AuthResponse } from '../../../servicios/auth';
+import { AuthService } from '../../../servicios/auth';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-signin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './signin.html',
   styleUrls: ['./signin.css']
 })
 export class Signin {
-  form: FormGroup;
+  form: any;
   mensaje = '';
   tipoMensaje = '';
   isLoading = false;
@@ -24,56 +24,52 @@ export class Signin {
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)
+        ]
+      ]
     });
   }
 
-  login(): void {
-    if (this.form.invalid) {
-      this.mensaje = 'Complete los campos correctamente';
+  login() {
+    if (this.form.valid) {
+      this.isLoading = true;
+      const { email, password } = this.form.value;
+
+      this.auth.login({ email, password }).subscribe({
+        next: (res) => {
+          this.mensaje = res.message || 'Ingreso exitoso';
+          this.tipoMensaje = 'success';
+
+          // Limpiar formulario
+          this.form.reset();
+          
+          // Redirigir a productos
+          setTimeout(() => {
+            this.router.navigate(['/productos']);
+            this.isLoading = false;
+          }, 1500);
+        },
+        error: (err) => {
+          console.error(err);
+          this.mensaje = err.error?.message || 'Error al iniciar sesión';
+          this.tipoMensaje = 'danger';
+          this.isLoading = false;
+        }
+      });
+    } else {
+      if (this.form.controls['password'].errors?.['pattern']) {
+        this.mensaje =
+          'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.';
+      } else {
+        this.mensaje = 'Complete todos los campos correctamente.';
+      }
       this.tipoMensaje = 'warning';
-      return;
     }
 
-    this.isLoading = true;
-    const { email, password } = this.form.value;
-
-    // 🔹 Llamada al servicio
-    this.auth.login({ email, password }).subscribe({
-      next: (res: AuthResponse) => {
-        this.isLoading = false;
-        this.mensaje = res.message || 'Inicio de sesión exitoso';
-        this.tipoMensaje = 'success';
-
-        // ✅ Validación segura con encadenamiento opcional
-        if (res?.user) {
-          // Guardar usuario logueado en localStorage
-          localStorage.setItem('usuario', JSON.stringify(res.user));
-
-          /* asi estaba antes, ya se agrego condicional en vista productos
-           🔹 Mostrar mensaje breve y redirigir según el rol
-          setTimeout(() => {
-            if (res.user?.rol === 'admin') {
-              this.router.navigate(['/productos']);
-            } else {
-              this.router.navigate(['/carrito']);
-            }
-          }, 1500);
-*/
-          setTimeout(() => {
-              this.router.navigate(['/productos']);
-          }, 1500);
-        }
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        console.error(err);
-        this.mensaje = err.error?.message || 'Error al iniciar sesión';
-        this.tipoMensaje = 'danger';
-      }
-    });
-
-    // 🔹 Limpieza del mensaje luego de unos segundos
     setTimeout(() => {
       this.mensaje = '';
       this.tipoMensaje = '';

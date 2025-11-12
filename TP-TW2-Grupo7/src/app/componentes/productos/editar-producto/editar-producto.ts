@@ -36,7 +36,7 @@ export class EditarProducto implements OnInit {
     });
 
     // Cargar datos existentes del producto
-    this.productosService.obtenerPorId(this.productoId).subscribe((producto) => {
+    this.productosService.obtenerProductoPorId(this.productoId).subscribe((producto) => {
       if (producto) {
         this.form.patchValue(producto);
       } else {
@@ -59,8 +59,8 @@ export class EditarProducto implements OnInit {
     };
 
     // Por ahora simulamos la actualización en memoria
-    this.productosService.eliminar(this.productoId).subscribe(() => {
-      this.productosService.crear(productoEditado).subscribe(() => {
+    this.productosService.eliminarProducto(this.productoId).subscribe(() => {
+      this.productosService.crearProducto(productoEditado).subscribe(() => {
         this.mensaje = '✅ Producto actualizado con éxito';
         this.tipoMensaje = 'success';
 

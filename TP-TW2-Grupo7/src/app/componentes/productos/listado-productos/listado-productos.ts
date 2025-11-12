@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // ✅ <-- agregá esto
+import { FormsModule } from '@angular/forms';
 import { ProductosService } from '../../../servicios/productos';
 import { Producto } from '../../../modelos/producto';
 import { RouterLink } from '@angular/router';
@@ -11,7 +11,7 @@ import { SearchService } from '../../../servicios/search';
 @Component({
   selector: 'app-listado-productos',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink], // ✅ <-- agregalo acá también
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './listado-productos.html',
   styleUrls: ['./listado-productos.css'],
 })
@@ -21,6 +21,8 @@ export class ListadoProductos implements OnInit {
   categorias: string[] = [];
   categoriaSeleccionada: string = '';
   precioMax: number = 0;
+  isLoading: boolean = true;
+  errorMensaje: string = ''; 
 
   constructor(
     private productosService: ProductosService,
@@ -35,10 +37,20 @@ export class ListadoProductos implements OnInit {
   }
 
   cargarProductos() {
-    this.productosService.listar().subscribe((data) => {
-      this.productos = data;
-      this.todosLosProductos = data;
-      this.categorias = Array.from(new Set(data.map((p) => p.clasificacion)));
+    this.isLoading = true;
+    this.errorMensaje = '';
+    this.productosService.obtenerProductos().subscribe({
+      next: (data) => {
+        this.productos = data;
+        this.todosLosProductos = data;
+        this.categorias = Array.from(new Set(data.map((p) => p.clasificacion)));
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar productos:', err);
+        this.errorMensaje = 'Error al cargar productos. Intente más tarde.';
+        this.isLoading = false;
+      },
     });
   }
 
@@ -64,14 +76,27 @@ export class ListadoProductos implements OnInit {
 
   agregarAlCarrito(producto: Producto) {
     this.carritoService.agregarProducto(producto);
-    alert('¡Producto agregado al carrito!');
+    alert('Producto agregado al carrito');
+    console.log('Producto agregado al carrito:', producto.nombre);
   }
 
   eliminar(id?: number) {
     if (!id) return;
-    if (confirm('¿Seguro que querés eliminar este producto?')) {
-      this.productosService.eliminar(id).subscribe(() => {
-        this.cargarProductos();
+
+    // Reemplazar esto con un modal de confirmación
+    const confirmado = true; // Simulación de confirmación
+    // const confirmado = window.confirm('¿Seguro que querés eliminar este producto?');
+
+    if (confirmado) {
+      this.productosService.eliminarProducto(id).subscribe({
+        next: () => {
+          console.log('Producto eliminado');
+          this.cargarProductos(); 
+        },
+        error: (err) => {
+          console.error('Error al eliminar el producto:', err);
+          this.errorMensaje = 'Error al eliminar el producto.';
+        },
       });
     }
   }

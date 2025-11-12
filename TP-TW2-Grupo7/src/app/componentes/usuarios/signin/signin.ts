@@ -44,10 +44,12 @@ export class Signin {
           this.mensaje = res.message || 'Ingreso exitoso';
           this.tipoMensaje = 'success';
 
-          // Limpiar formulario
+          if (res.user && typeof window !== 'undefined') {
+            localStorage.setItem('usuario', JSON.stringify(res.user));
+          }
+
           this.form.reset();
-          
-          // Redirigir a productos
+
           setTimeout(() => {
             this.router.navigate(['/productos']);
             this.isLoading = false;

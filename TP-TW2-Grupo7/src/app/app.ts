@@ -39,7 +39,7 @@ import { Observable } from 'rxjs';
 
               <a *ngIf="authService.esCliente()"
                  routerLink="/carrito"
-                 class="text-gray-300 hover:text-white relative"
+                 class="text-gray-300 hover:text-white relative mx-3"
                  title="Ver carrito">
 
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

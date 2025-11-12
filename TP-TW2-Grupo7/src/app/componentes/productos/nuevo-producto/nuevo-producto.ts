@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProductosService } from '../../../servicios/productos';
@@ -10,12 +10,12 @@ import { Producto } from '../../../modelos/producto';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './nuevo-producto.html',
-  styleUrls: ['./nuevo-producto.css']
+  styleUrls: ['./nuevo-producto.css'],
 })
 export class NuevoProducto implements OnInit {
   mensaje = '';
   tipoMensaje = '';
-  form: any;
+  form!: FormGroup; 
 
   constructor(
     private fb: FormBuilder,
@@ -28,11 +28,14 @@ export class NuevoProducto implements OnInit {
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       clasificacion: ['', Validators.required],
-      precio: [0, [Validators.required, Validators.min(1)]]
+      precio: [0, [Validators.required, Validators.min(1)]],
     });
   }
 
   guardar() {
+    this.mensaje = ''; 
+    this.form.markAllAsTouched();
+
     if (this.form.invalid) {
       this.mensaje = '⚠️ Complete todos los campos correctamente';
       this.tipoMensaje = 'warning';
@@ -41,13 +44,20 @@ export class NuevoProducto implements OnInit {
 
     const nuevoProducto: Producto = this.form.value as Producto;
 
-    this.productosService.crear(nuevoProducto).subscribe(() => {
-      this.mensaje = '✅ Producto agregado con éxito';
-      this.tipoMensaje = 'success';
+    this.productosService.crearProducto(nuevoProducto).subscribe({
+      next: () => {
+        this.mensaje = '✅ Producto agregado con éxito';
+        this.tipoMensaje = 'success';
 
-      setTimeout(() => {
-        this.router.navigate(['/productos']);
-      }, 1500);
+        setTimeout(() => {
+          this.router.navigate(['/productos']);
+        }, 1500);
+      },
+      error: (err) => {
+        console.error('Error al crear el producto:', err);
+        this.mensaje = '❌ Error al guardar el producto. Verifique los datos o intente más tarde.';
+        this.tipoMensaje = 'error'; 
+      }
     });
   }
 }

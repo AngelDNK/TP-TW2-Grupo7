@@ -41,16 +41,20 @@ export class AuthService {
     return this.http.post<{ message: string }>(`${API_URL}/recuperar`, data);
   }
 
+  // 🔹 RESTABLECER CONTRASEÑA (para el link del email)
+  resetPassword(data: { token: string; nuevaPassword: string }): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${API_URL}/reset-password`, data);
+  }
+
+  // 🔹 Obtener usuario logueado
   obtenerUsuarioLogueado(): User | null {
     if (typeof window === 'undefined') return null;
 
     const usuarioStorage = localStorage.getItem('usuario');
-    if (usuarioStorage) {
-      return JSON.parse(usuarioStorage) as User;
-    }
-    return null;
+    return usuarioStorage ? (JSON.parse(usuarioStorage) as User) : null;
   }
 
+  // 🔹 Roles (en caso de necesitarlo en el futuro)
   esAdmin(): boolean {
     const usuario = this.obtenerUsuarioLogueado();
     return usuario ? usuario.rol === 'admin' : false;
@@ -61,9 +65,8 @@ export class AuthService {
     return usuario ? usuario.rol === 'cliente' : false;
   }
 
-
+  // 🔹 Logout
   logout(): void {
     localStorage.removeItem('usuario');
-
   }
 }

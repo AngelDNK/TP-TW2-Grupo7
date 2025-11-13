@@ -1,4 +1,21 @@
-<div class="container mx-auto p-4 md:p-8" *ngIf="producto; else noEncontrado">
+<div class="container mx-auto p-4 md:p-8">
+  @if (isLoading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
+
+  <!-- 2. Estado de Error -->
+  @else if (errorMensaje) {
+  <div class="flex flex-col justify-center items-center h-96 gap-4">
+    <p class="text-2xl text-red-500 font-semibold">{{ errorMensaje }}</p>
+    <a routerLink="/productos" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+      Volver al listado
+    </a>
+  </div>
+  }
+
+  @else if (producto) {
   <a routerLink="/productos"
     class="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors mb-6 group">
     <svg class="w-5 h-5 mr-2 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor"
@@ -39,7 +56,6 @@
       </div>
 
       <div class="space-y-4">
-
         <a *ngIf="authService.esAdmin()" routerLink="/editar-producto"
           class="w-full text-center bg-yellow-500 text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-yellow-600 transition-colors text-lg inline-block">
           Editar Producto
@@ -53,22 +69,9 @@
       </div>
     </div>
   </div>
-</div>
-
-<ng-template #noEncontrado>
-  <div class="container mx-auto p-4 md:p-8">
-    <div class="p-4 bg-red-800 border border-red-600 text-white rounded-lg shadow-lg">
-      <h2 class="font-bold text-xl mb-2">Error</h2>
-      Producto no encontrado
-    </div>
-    <a routerLink="/productos"
-      class="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors mt-6 group">
-      <svg class="w-5 h-5 mr-2 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor"
-        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
-        </path>
-      </svg>
-      Volver al listado
-    </a>
+  } @else {
+  <div class="flex justify-center items-center h-96">
+    <p class="text-lg text-gray-500">No se pudo cargar el producto.</p>
   </div>
-</ng-template>
+  }
+</div>

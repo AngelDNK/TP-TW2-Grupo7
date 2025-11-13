@@ -12,21 +12,47 @@ console.log("📩 EMAIL_PASS:", process.env.EMAIL_PASS ? "CARGADA ✅" : "NO CAR
 
 import express from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser';
 import authRoutes from './routes/auth.routes';
-import { conectarDB } from './database/db';
+import productRoutes from './routes/producto.routes'; 
+import { db } from './database/db';
+
+// Importar modelos para la sincronización
+import './models/user.model';
+import './models/producto.model';
 
 const app = express();
+const port = process.env.PORT || 3000;
+
+// Middlewares
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
-// 🔹 Conexión con la base de datos
-conectarDB();
-
-// 🔹 Rutas
-app.use('/api/auth', authRoutes);
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`✅ Servidor backend corriendo en http://localhost:${PORT}`);
+// Rutas
+app.get('/', (req, res) => {
+  res.send('API is running...');
 });
+
+app.use('/api/auth', authRoutes);
+app.use('/api/productos', productRoutes); 
+
+const startServer = async () => {
+  try {
+    await db.authenticate();
+    console.log('Database connected successfully.');
+
+    // Sincronizar modelos
+    // Usar alter:true en desarrollo para que actualice las tablas sin borrarlas
+    await db.sync({ alter: true }); 
+    console.log('All models were synchronized successfully.');
+
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error('Unable to connect to the database or start server:', error);
+  }
+};
+
+startServer();
+
+export default app;

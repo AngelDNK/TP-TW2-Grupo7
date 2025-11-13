@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import { Signin } from './componentes/usuarios/signin/signin';
 import { Signup } from './componentes/usuarios/signup/signup';
 import { Recuperar } from './componentes/usuarios/recuperar/recuperar';
+import { ResetPassword } from './componentes/usuarios/reset-password/reset-password';
 
 //COSAS DE PRODUCTOS
 import { ListadoProductos } from './componentes/productos/listado-productos/listado-productos';
@@ -19,6 +20,7 @@ export const routes: Routes = [
      { path: 'signin', component: Signin },
      { path: 'signup', component: Signup},
      { path: 'recuperar', component: Recuperar},
+     { path: 'reset-password', component: ResetPassword },
      { path: 'productos', component: ListadoProductos},
      { path: 'producto/:id', component: DetalleProducto},
      { path: 'nuevo-producto', component: NuevoProducto},

@@ -3,42 +3,37 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-/**
- * Envía un correo electrónico de recuperación de contraseña.
- * @param email - Dirección del usuario destinatario.
- * @param token - Token o enlace único de recuperación.
- */
+console.log('📩 Variables cargadas:');
+console.log('EMAIL_USER:', process.env.EMAIL_USER);
+console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? '********' : 'NO DEFINIDA');
+
 export async function sendRecoveryEmail(email: string, token: string) {
-  // 🔐 Configuración segura usando variables de entorno (.env)
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.GMAIL_USER, // correo que usás para enviar
-      pass: process.env.GMAIL_PASS  // clave de aplicación de Gmail
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
     }
   });
 
-  // 📬 Enlace de recuperación (ajustá la URL si usás otro puerto o dominio)
-  const recoveryLink = `http://localhost:4200/reset-password?token=${token}`;
+  const recoveryLink = `${process.env.FRONT_URL}/reset-password?token=${token}`;
 
   const mailOptions = {
-    from: `"Soporte TP Taller Web 2 - Grupo 7" <${process.env.GMAIL_USER}>`,
+    from: `"Soporte Grupo 7" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'Recuperación de contraseña',
     html: `
-      <h2>Restablecer tu contraseña</h2>
-      <p>Hola 👋, recibimos una solicitud para restablecer tu contraseña.</p>
-      <p>Hacé clic en el siguiente enlace para continuar:</p>
+      <h2>Recuperación de contraseña</h2>
+      <p>Hacé clic en el siguiente enlace para restablecerla:</p>
       <a href="${recoveryLink}" target="_blank">${recoveryLink}</a>
       <br><br>
-      <p>Si no solicitaste este cambio, podés ignorar este mensaje.</p>
-      <p>— Equipo de soporte de TP Taller Web 2 - Grupo 7</p>
+      <p>Si no solicitaste este cambio, podés ignorar este correo.</p>
     `
   };
 
   try {
-    await transporter.sendMail(mailOptions);
-    console.log(`✅ Correo de recuperación enviado a: ${email}`);
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`✅ Correo enviado correctamente a ${email} (ID: ${info.messageId})`);
   } catch (error) {
     console.error('❌ Error al enviar el correo:', error);
     throw new Error('No se pudo enviar el correo de recuperación');

@@ -1,6 +1,8 @@
 import { Sequelize } from 'sequelize';
 
-export const db = new Sequelize('tp_taller_web2', 'root', 'agusscuchi', {
+export const db = new Sequelize('tp_taller_web2', 'root', '', {
   host: 'localhost',
   dialect: 'mysql',
 });
+
+/*ACUERDENSE SI TIENEN CONTRASEÑA en MySQL Workbench, SI NO LES DA ERROR*/

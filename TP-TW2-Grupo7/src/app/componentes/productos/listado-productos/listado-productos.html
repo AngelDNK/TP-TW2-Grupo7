@@ -17,7 +17,8 @@
 
     <div class="col-md-4 mb-2">
       <label class="form-label fw-bold">Buscar por nombre</label>
-      <input type="text" [(ngModel)]="search" (input)="actualizarFiltros()" class="form-control" placeholder="Buscar..." />
+      <input type="text" [(ngModel)]="search" (input)="actualizarFiltros()" class="form-control"
+        placeholder="Buscar..." />
     </div>
     @if (authService.esAdmin()){
     <div class="col-md-4 mb-2 flex items-end">
@@ -29,12 +30,11 @@
     }
 
     <div class="col-md-4 mb-2 flex items-end">
-  <button
-    (click)="limpiarFiltros()"
-    class="w-full bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-700 transition-colors">
-    Limpiar filtros
-  </button>
-</div>
+      <button (click)="limpiarFiltros()"
+        class="w-full bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-700 transition-colors">
+        Limpiar filtros
+      </button>
+    </div>
 
   </div>
 
@@ -45,11 +45,8 @@
     <div (click)="verDetalle(p.id)"
       class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-transform duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer">
 
-  <img
-  [src]="p.imagen || 'https://placehold.co/600x400/eeeeee/999999?text=Sin+Imagen'"
-  [alt]="'Imagen de ' + p.nombre"
-  class="w-full h-48 object-cover"
-/>
+      <img [src]="p.imagen || 'https://placehold.co/600x400/eeeeee/999999?text=Sin+Imagen'"
+        [alt]="'Imagen de ' + p.nombre" class="w-full h-48 object-cover" />
 
 
 

@@ -42,7 +42,7 @@ User.init(
     rol: {
       type: DataTypes.ENUM('admin', 'cliente'),
       allowNull: false,
-      defaultValue: 'cliente' // 👈 importante
+      defaultValue: 'cliente' 
     }
   },
   {

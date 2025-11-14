@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { Component } from '@angular/core';
 
 //COSAS DE USUARIO
 import { Signin } from './componentes/usuarios/signin/signin';

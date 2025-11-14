@@ -5,6 +5,7 @@ import { ProductosService } from '../../../servicios/productos';
 import { Producto } from '../../../modelos/producto';
 import { CarritoService } from '../../../servicios/carrito';
 import { AuthService } from '../../../servicios/auth';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -15,15 +16,16 @@ import { AuthService } from '../../../servicios/auth';
 })
 export class DetalleProducto implements OnInit {
   producto?: Producto;
-  isLoading: boolean = true; 
-  errorMensaje: string = ''; 
+  isLoading: boolean = true;
+  errorMensaje: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private productosService: ProductosService,
     public authService: AuthService,
-    private carritoService: CarritoService
-  ) {}
+    private carritoService: CarritoService,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -31,7 +33,7 @@ export class DetalleProducto implements OnInit {
       if (id) {
         this.isLoading = true;
         this.errorMensaje = '';
-        this.producto = undefined; 
+        this.producto = undefined;
 
         this.productosService.obtenerProductoPorId(id).subscribe({
           next: (data) => {
@@ -52,9 +54,9 @@ export class DetalleProducto implements OnInit {
   }
 
   agregarAlCarrito(producto: Producto): void {
-    if (!producto) return; 
+    if (!producto) return;
     this.carritoService.agregarProducto(producto);
-    alert('Producto agregado al carrito');
+    this.toastr.success('Producto agregado al carrito', producto.nombre);
     console.log('Producto agregado al carrito:', producto.nombre);
   }
 }

@@ -7,6 +7,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../servicios/auth';
 import { CarritoService } from '../../../servicios/carrito';
 import { FilterService, Filtros } from '../../../servicios/filter.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-listado-productos',
@@ -29,7 +30,8 @@ export class ListadoProductos implements OnInit {
     private productosService: ProductosService,
     public authService: AuthService,
     private carritoService: CarritoService,
-    private filterService: FilterService
+    private filterService: FilterService,
+    private toastr: ToastrService
   ) { }
 
 
@@ -46,20 +48,18 @@ export class ListadoProductos implements OnInit {
   }
 
   limpiarFiltros() {
-  this.search = '';
-  this.categoriaSeleccionada = '';
-  this.precioMax = 0;
+    this.search = '';
+    this.categoriaSeleccionada = '';
+    this.precioMax = 0;
 
-  // Actualizar filtros globales (para que otros componentes también lo sepan)
-  this.filterService.guardarFiltros({
-    search: '',
-    categoria: '',
-    precioMax: 0
-  });
+    this.filterService.guardarFiltros({
+      search: '',
+      categoria: '',
+      precioMax: 0
+    });
 
-  // Vuelve a cargar todos los productos sin filtros
-  this.aplicarFiltros();
-}
+    this.aplicarFiltros();
+  }
 
 
   cargarCategorias() {
@@ -119,17 +119,24 @@ export class ListadoProductos implements OnInit {
 
   agregarAlCarrito(p: Producto) {
     this.carritoService.agregarProducto(p);
-    alert('Producto agregado al carrito');
+    this.toastr.success('Producto agregado al carrito', p.nombre);
   }
 
   eliminar(id?: number) {
     if (!id) return;
 
-    const confirmado = true;
+    const confirmado = confirm('¿Estás seguro de que deseas eliminar este producto?');
 
     if (confirmado) {
-      this.productosService.eliminarProducto(id).subscribe(() => {
-        this.aplicarFiltros();
+      this.productosService.eliminarProducto(id).subscribe({
+        next: () => {
+          this.toastr.success('Producto eliminado correctamente');
+          this.aplicarFiltros();
+        },
+        error: (err) => {
+          this.toastr.error('Error al eliminar el producto', 'Error');
+          console.error(err);
+        }
       });
     }
   }

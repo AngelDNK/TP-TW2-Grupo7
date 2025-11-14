@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductosService } from '../../../servicios/productos';
 import { Producto } from '../../../modelos/producto';
 import { Location } from '@angular/common';
@@ -10,7 +10,7 @@ import { Location } from '@angular/common';
 @Component({
   selector: 'app-editar-producto',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './editar-producto.html',
   styleUrls: ['./editar-producto.css']
 })
@@ -22,14 +22,14 @@ export class EditarProducto implements OnInit {
   mensaje = '';
   tipoMensaje = '';
 
-  imagenActual: string = ''; // ⭐ nueva variable
+  imagenActual: string = '';
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private productosService: ProductosService,
-    private location : Location
+    private location: Location
 
   ) { }
 
@@ -53,7 +53,7 @@ export class EditarProducto implements OnInit {
           next: (producto) => {
             if (producto) {
 
-              this.imagenActual = producto.imagen; // ⭐ guardamos imagen original
+              this.imagenActual = producto.imagen;
 
               this.form.patchValue(producto);
             } else {
@@ -78,8 +78,8 @@ export class EditarProducto implements OnInit {
   }
 
   cancelar() {
-  this.location.back();
-}
+    this.location.back();
+  }
 
   onFileSelected(event: any) {
     const file = event.target.files[0];

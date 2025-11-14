@@ -3,6 +3,7 @@ import { User } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { sendRecoveryEmail } from '../utils/emailHelper';
+import jwt from 'jsonwebtoken';
 
 // mapa temporal para guardar los tokens generados (email <-> token)
 const passwordResetTokens = new Map<string, string>();
@@ -23,8 +24,21 @@ export const AuthController = {
         return res.status(401).json({ message: 'Contraseña incorrecta' });
       }
 
+      const jwtSecret = process.env.JWT_SECRET;
+      if (!jwtSecret) {
+        console.error('❌ JWT_SECRET no está definida en .env. No se puede generar token.');
+        return res.status(500).json({ message: 'Error del servidor: Configuración de JWT faltante' });
+      }
+
+      const token = jwt.sign(
+        { id: user.id, rol: user.rol },
+        jwtSecret,
+        { expiresIn: '1h' } 
+      );
+
       res.json({
         message: 'Inicio de sesión exitoso',
+        token: token,
         user: {
           id: user.id,
           nombre: user.nombre,

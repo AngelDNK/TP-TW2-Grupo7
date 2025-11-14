@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductosService } from '../../../servicios/productos';
 import { Producto } from '../../../modelos/producto';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../servicios/auth';
 import { CarritoService } from '../../../servicios/carrito';
 import { SearchService } from '../../../servicios/search';
@@ -22,14 +22,16 @@ export class ListadoProductos implements OnInit {
   categoriaSeleccionada: string = '';
   precioMax: number = 0;
   isLoading: boolean = true;
-  errorMensaje: string = ''; 
+  errorMensaje: string = '';
+
+  private router = inject(Router);
 
   constructor(
     private productosService: ProductosService,
     public authService: AuthService,
     private carritoService: CarritoService,
     private searchService: SearchService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.cargarProductos();
@@ -52,6 +54,12 @@ export class ListadoProductos implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  verDetalle(id: number | undefined) {
+    if (id) {
+      this.router.navigate(['/producto', id]);
+    }
   }
 
   aplicarFiltros(searchTerm: string = '') {
@@ -83,15 +91,13 @@ export class ListadoProductos implements OnInit {
   eliminar(id?: number) {
     if (!id) return;
 
-    // Reemplazar esto con un modal de confirmación
-    const confirmado = true; // Simulación de confirmación
-    // const confirmado = window.confirm('¿Seguro que querés eliminar este producto?');
+    const confirmado = true;
 
     if (confirmado) {
       this.productosService.eliminarProducto(id).subscribe({
         next: () => {
           console.log('Producto eliminado');
-          this.cargarProductos(); 
+          this.cargarProductos();
         },
         error: (err) => {
           console.error('Error al eliminar el producto:', err);

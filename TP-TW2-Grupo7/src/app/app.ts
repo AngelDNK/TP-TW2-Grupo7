@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
   imports: [RouterOutlet, RouterLink, CommonModule],
   template: `
     <!-- INICIO: Navbar -->
-    <nav class="bg-slate-800 text-white shadow-md border-b border-slate-700">
+    <nav class="fixed w-full top-0 z-50 glass-effect md:p-0">
       <div class="container mx-auto px-4">
         <div class="flex justify-between items-center h-16">
           <!-- Logo -->

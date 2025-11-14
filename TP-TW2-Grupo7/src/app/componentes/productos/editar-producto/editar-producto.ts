@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductosService } from '../../../servicios/productos';
 import { Producto } from '../../../modelos/producto';
+import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-editar-producto',
@@ -20,11 +22,15 @@ export class EditarProducto implements OnInit {
   mensaje = '';
   tipoMensaje = '';
 
+  imagenActual: string = ''; // ⭐ nueva variable
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private productosService: ProductosService
+    private productosService: ProductosService,
+    private location : Location
+
   ) { }
 
   ngOnInit(): void {
@@ -32,7 +38,8 @@ export class EditarProducto implements OnInit {
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       clasificacion: ['', Validators.required],
-      precio: [0, [Validators.required, Validators.min(1)]]
+      precio: [0, [Validators.required, Validators.min(1)]],
+      imagen: ['']
     });
 
     this.route.paramMap.subscribe(params => {
@@ -45,6 +52,9 @@ export class EditarProducto implements OnInit {
         this.productosService.obtenerProductoPorId(this.productoId).subscribe({
           next: (producto) => {
             if (producto) {
+
+              this.imagenActual = producto.imagen; // ⭐ guardamos imagen original
+
               this.form.patchValue(producto);
             } else {
               this.mensaje = 'Producto no encontrado';
@@ -60,12 +70,27 @@ export class EditarProducto implements OnInit {
           }
         });
       } else {
-        // Caso: No hay ID en la URL
         this.mensaje = 'ID de producto no válido.';
         this.tipoMensaje = 'error';
         this.isLoading = false;
       }
     });
+  }
+
+  cancelar() {
+  this.location.back();
+}
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      this.form.patchValue({ imagen: base64 });
+    };
+    reader.readAsDataURL(file);
   }
 
   guardar() {
@@ -96,3 +121,4 @@ export class EditarProducto implements OnInit {
     });
   }
 }
+

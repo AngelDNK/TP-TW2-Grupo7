@@ -45,6 +45,23 @@ export class ListadoProductos implements OnInit {
     });
   }
 
+  limpiarFiltros() {
+  this.search = '';
+  this.categoriaSeleccionada = '';
+  this.precioMax = 0;
+
+  // Actualizar filtros globales (para que otros componentes también lo sepan)
+  this.filterService.guardarFiltros({
+    search: '',
+    categoria: '',
+    precioMax: 0
+  });
+
+  // Vuelve a cargar todos los productos sin filtros
+  this.aplicarFiltros();
+}
+
+
   cargarCategorias() {
     this.productosService.obtenerProductos().subscribe({
       next: (data) => {

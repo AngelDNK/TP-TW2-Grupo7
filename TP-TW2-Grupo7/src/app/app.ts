@@ -5,6 +5,8 @@ import { AuthService } from './servicios/auth';
 import { SearchService } from './servicios/search';
 import { CarritoService } from './servicios/carrito';
 import { Observable } from 'rxjs';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './servicios/auth.interceptor';
 
 @Component({
   selector: 'app-root',
@@ -200,36 +202,35 @@ import { Observable } from 'rxjs';
   ],
 })
 export class App {
-  totalItemsCarrito$: Observable<number>;
-  isMenuOpen = false;
+  totalItemsCarrito$: Observable<number>;
+  isMenuOpen = false;
 
-  constructor(
-    public authService: AuthService,
-    private router: Router,
-    public searchService: SearchService,
-    private carritoService: CarritoService
-  ) {
-    this.totalItemsCarrito$ = this.carritoService.totalItems$;
-  }
+  constructor(
+    public authService: AuthService,
+    private router: Router,
+    public searchService: SearchService,
+    private carritoService: CarritoService
+  ) {
+    this.totalItemsCarrito$ = this.carritoService.totalItems$;
+  }
 
-  onSearchChange(event: any) {
-    this.searchService.setSearchTerm(event.target.value);
-  }
+  onSearchChange(event: any) {
+    this.searchService.setSearchTerm(event.target.value);
+  }
 
-  toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
-  }
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 
-  closeMenu() {
-    this.isMenuOpen = false;
-  }
+  closeMenu() {
+    this.isMenuOpen = false;
+  }
 
-  // `fromMobile` para cerrar el menú si viene del botón del menú móvil
-  logout(fromMobile: boolean = false): void {
-    this.authService.logout();
-    if (fromMobile) {
-      this.closeMenu();
-    }
-    this.router.navigate(['/signin']);
-  }
+  logout(fromMobile: boolean = false): void {
+    this.authService.logout();
+    if (fromMobile) {
+      this.closeMenu();
+    }
+    this.router.navigate(['/signin']);
+  }
 }

@@ -3,15 +3,21 @@ import { db } from '../database/db';
 import { Pedido } from '../models/pedido.model';
 import { PedidoItem } from '../models/pedido-item.model';
 import { Producto } from '../models/producto.model';
-import { AuthController } from './auth.controller';
+import { RequestConUsuario } from '../middleware/auth.middleware';
 
 
 export const crearPedido = async (req: Request, res: Response) => {
+  const reqConUsuario = req as RequestConUsuario;
+
   const t = await db.transaction();
   
-  // temporalmente id fijo, ajustar
-  const usuario_id = 1
+  const usuario_id = reqConUsuario.usuario_id;
   
+  if (!usuario_id) {
+    await t.rollback();
+    return res.status(401).json({ message: 'No autorizado. ID de usuario no encontrado.' });
+  }
+
   const { items, metodo_pago, tipo_entrega, datos_entrega } = req.body;
 
   try {
@@ -53,7 +59,13 @@ export const crearPedido = async (req: Request, res: Response) => {
 };
 
 export const obtenerPedidos = async (req: Request, res: Response) => {
-  const usuario_id = 1; // ajustar con auth
+  const reqConUsuario = req as RequestConUsuario;
+  const usuario_id = reqConUsuario.usuario_id;
+
+  if (!usuario_id) {
+    return res.status(401).json({ message: 'No autorizado. ID de usuario no encontrado.' });
+  }
+
   try {
     const pedidos = await Pedido.findAll({
       where: { usuario_id },
@@ -62,6 +74,7 @@ export const obtenerPedidos = async (req: Request, res: Response) => {
     });
     res.json(pedidos);
   } catch (error) {
+    console.error('❌ Error al obtener pedidos:', error); 
     res.status(500).json({ message: 'Error al obtener pedidos' });
   }
 };

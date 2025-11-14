@@ -15,9 +15,4 @@ export async function conectarDB() {
   }
 }
 
-// export const db = new Sequelize('tp_taller_web2', 'root', 'Karasuno25.', {
-//   host: 'localhost',
-//   dialect: 'mysql',
-// });
-
 /*ACUERDENSE SI TIENEN CONTRASEÑA en MySQL Workbench, SI NO LES DA ERROR*/

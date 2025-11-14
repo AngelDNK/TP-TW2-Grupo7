@@ -1,0 +1,91 @@
+<div class="container mx-auto p-6 text-white max-w-4xl">
+
+  <div class="flex justify-between mb-8 border-b border-slate-700 pb-4">
+    <span [class.text-blue-400]="step >= 1" class="font-bold">1. Pago</span>
+    <span [class.text-blue-400]="step >= 3" class="font-bold">2. Entrega</span>
+    <span [class.text-blue-400]="step >= 6" class="font-bold">3. Confirmar</span>
+  </div>
+
+  <div class="bg-slate-800 p-6 rounded-lg shadow-lg">
+
+    <div *ngIf="step === 1">
+      <h2 class="text-2xl font-bold mb-4">¿Cómo deseas pagar?</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <button (click)="elegirPago('efectivo')" class="bg-slate-700 p-4 rounded hover:bg-slate-600 border border-slate-500">
+          💵 Efectivo (Solo Retiro)
+        </button>
+        <button (click)="elegirPago('tarjeta')" class="bg-slate-700 p-4 rounded hover:bg-slate-600 border border-slate-500">
+          💳 Tarjeta de Crédito
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="step === 2">
+      <h2 class="text-2xl font-bold mb-4">Datos de la Tarjeta</h2>
+      <form [formGroup]="tarjetaForm" (ngSubmit)="procesarTarjeta()" class="space-y-4">
+        <input formControlName="numero" placeholder="Número de Tarjeta" class="w-full p-2 rounded bg-slate-700 border border-slate-600 text-white">
+        <div class="grid grid-cols-2 gap-4">
+          <input formControlName="nombre" placeholder="Nombre Titular" class="p-2 rounded bg-slate-700 border border-slate-600 text-white">
+          <input formControlName="cvc" placeholder="CVC" class="p-2 rounded bg-slate-700 border border-slate-600 text-white">
+        </div>
+        <button type="submit" [disabled]="tarjetaForm.invalid" class="w-full bg-blue-600 py-2 rounded font-bold mt-4 disabled:opacity-50">Continuar</button>
+      </form>
+    </div>
+
+    <div *ngIf="step === 3">
+      <h2 class="text-2xl font-bold mb-4">¿Cómo recibes el pedido?</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <button (click)="elegirEntrega('envio')" class="bg-slate-700 p-4 rounded hover:bg-slate-600 border border-slate-500">
+          🚚 Envío a domicilio
+        </button>
+        <button (click)="elegirEntrega('retiro')" class="bg-slate-700 p-4 rounded hover:bg-slate-600 border border-slate-500">
+          🏬 Retiro en local
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="step === 4">
+      <h2 class="text-2xl font-bold mb-4">Elige una sucursal</h2>
+      <div class="space-y-2">
+        <button (click)="elegirSucursal('Centro')" class="w-full text-left bg-slate-700 p-3 rounded hover:bg-slate-600">Sucursal Caballito</button>
+        <button (click)="elegirSucursal('Deposito')" class="w-full text-left bg-slate-700 p-3 rounded hover:bg-slate-600">Depósito Villa Luro</button>
+      </div>
+    </div>
+
+    <div *ngIf="step === 5">
+      <h2 class="text-2xl font-bold mb-4">Dirección de envío</h2>
+      <form [formGroup]="direccionForm" (ngSubmit)="guardarDireccion()" class="space-y-4">
+        <input formControlName="direccion" placeholder="Calle y Altura" class="w-full p-2 rounded bg-slate-700 border border-slate-600 text-white">
+        <input formControlName="ciudad" placeholder="Ciudad" class="w-full p-2 rounded bg-slate-700 border border-slate-600 text-white">
+        <button type="submit" [disabled]="direccionForm.invalid" class="w-full bg-blue-600 py-2 rounded font-bold mt-4 disabled:opacity-50">Continuar</button>
+      </form>
+    </div>
+
+    <div *ngIf="step === 6">
+      <h2 class="text-2xl font-bold mb-4 border-b border-slate-600 pb-2">Resumen del Pedido</h2>
+
+      <div class="mb-4 text-gray-300">
+        <p><strong>Pago:</strong> {{ compra.metodoPago | uppercase }}</p>
+        <p><strong>Entrega:</strong> {{ compra.tipoEntrega | uppercase }}</p>
+        <p *ngIf="compra.datosEntrega?.direccion"><strong>Dirección:</strong> {{ compra.datosEntrega.direccion }}, {{ compra.datosEntrega.ciudad }}</p>
+        <p *ngIf="compra.datosEntrega?.lugar"><strong>Lugar de retiro:</strong> {{ compra.datosEntrega.lugar }}</p>
+      </div>
+
+      <div class="bg-slate-900 p-4 rounded mb-6">
+        <div *ngFor="let item of cartItems$ | async" class="flex justify-between mb-2">
+          <span>{{ item.producto.nombre }} (x{{ item.cantidad }})</span>
+          <span>{{ (item.producto.precio * item.cantidad) | currency:'$' }}</span>
+        </div>
+        <div class="border-t border-slate-700 mt-2 pt-2 flex justify-between font-bold text-xl text-green-400">
+          <span>TOTAL</span>
+          <span>{{ total$ | async | currency:'$' }}</span>
+        </div>
+      </div>
+
+      <button (click)="finalizar()" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded text-xl font-bold shadow-lg transition-colors">
+        CONFIRMAR COMPRA
+      </button>
+    </div>
+
+  </div>
+</div>

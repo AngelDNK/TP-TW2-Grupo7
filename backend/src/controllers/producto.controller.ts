@@ -1,10 +1,22 @@
 import { Request, Response } from 'express';
 import { Producto } from '../models/producto.model';
+import { Op } from 'sequelize';
 
-// Listar los porductos
 export const listarProductos = async (req: Request, res: Response) => {
   try {
-    const productos = await Producto.findAll();
+    const { search } = req.query;
+    
+    let whereCondition = {};
+
+    if (search) {
+      whereCondition = {
+        nombre: {
+          [Op.like]: `%${search}%`
+        }
+      };
+    }
+
+    const productos = await Producto.findAll({ where: whereCondition });
     res.json(productos);
   } catch (error) {
     console.error(error);
@@ -12,7 +24,6 @@ export const listarProductos = async (req: Request, res: Response) => {
   }
 };
 
-// Obtener un producto por ID 
 export const obtenerProductoPorId = async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -30,12 +41,10 @@ export const obtenerProductoPorId = async (req: Request, res: Response) => {
   }
 };
 
-// Crear un nuevo producto
 export const crearProducto = async (req: Request, res: Response) => {
   const { body } = req;
 
   try {
-    // Valida que los campos necesarios esten
     const { nombre, descripcion, clasificacion, precio } = body;
     if (!nombre || !descripcion || !clasificacion || precio == null) {
       return res.status(400).json({ msg: 'Faltan campos obligatorios' });
@@ -49,7 +58,6 @@ export const crearProducto = async (req: Request, res: Response) => {
   }
 };
 
-// Actualiza un producto por ID 
 export const actualizarProducto = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { body } = req;
@@ -61,16 +69,14 @@ export const actualizarProducto = async (req: Request, res: Response) => {
       return res.status(404).json({ msg: `No se encontró el producto con el id ${id}` });
     }
 
-    // Actualiza el producto con los nuevos dateos
     await producto.update(body);
-    res.json(producto); // Devuelve el producto actualizado
+    res.json(producto);
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: 'Error al actualizar el producto' });
   }
 };
 
-// Eliminar un producto por ID 
 export const eliminarProducto = async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -81,7 +87,6 @@ export const eliminarProducto = async (req: Request, res: Response) => {
       return res.status(404).json({ msg: `No se encontró el producto con el id ${id}` });
     }
 
-    // Eliminar el producto
     await producto.destroy();
     res.json({ msg: 'Producto eliminado exitosamente' });
   } catch (error) {

@@ -17,7 +17,6 @@ import { FilterService, Filtros } from '../../../servicios/filter.service';
 })
 export class ListadoProductos implements OnInit {
   productos: Producto[] = [];
-  todosLosProductos: Producto[] = [];
   categorias: string[] = [];
   private router = inject(Router);
   isLoading = true;
@@ -30,13 +29,12 @@ export class ListadoProductos implements OnInit {
     private productosService: ProductosService,
     public authService: AuthService,
     private carritoService: CarritoService,
-
     private filterService: FilterService
   ) { }
 
 
   ngOnInit(): void {
-    this.cargarProductos();
+    this.cargarCategorias();
 
     this.filterService.filtros$.subscribe((filtros) => {
       this.search = filtros.search;
@@ -47,17 +45,37 @@ export class ListadoProductos implements OnInit {
     });
   }
 
-  cargarProductos() {
+  cargarCategorias() {
+    this.productosService.obtenerProductos().subscribe({
+      next: (data) => {
+        this.categorias = Array.from(new Set(data.map((p) => p.clasificacion)));
+      },
+      error: () => {
+        this.errorMensaje = 'Error al cargar categorías.';
+      },
+    });
+  }
+
+  aplicarFiltros() {
     this.isLoading = true;
     this.errorMensaje = '';
 
-    this.productosService.obtenerProductos().subscribe({
+    this.productosService.obtenerProductos(this.search).subscribe({
       next: (data) => {
-        this.todosLosProductos = data;
-        this.categorias = Array.from(new Set(data.map((p) => p.clasificacion)));
-        this.isLoading = false;
+        let filtrados = data;
 
-        this.aplicarFiltros();
+        if (this.categoriaSeleccionada) {
+          filtrados = filtrados.filter((p) =>
+            p.clasificacion === this.categoriaSeleccionada
+          );
+        }
+
+        if (this.precioMax > 0) {
+          filtrados = filtrados.filter((p) => p.precio <= this.precioMax);
+        }
+
+        this.productos = filtrados;
+        this.isLoading = false;
       },
       error: () => {
         this.errorMensaje = 'Error al cargar productos.';
@@ -72,7 +90,6 @@ export class ListadoProductos implements OnInit {
     }
   }
 
-  // 🔹 Guarda filtros y los aplica
   actualizarFiltros() {
     const filtros: Filtros = {
       search: this.search,
@@ -81,28 +98,6 @@ export class ListadoProductos implements OnInit {
     };
 
     this.filterService.guardarFiltros(filtros);
-  }
-
-  aplicarFiltros() {
-    let filtrados = [...this.todosLosProductos];
-
-    if (this.search.trim()) {
-      filtrados = filtrados.filter((p) =>
-        p.nombre.toLowerCase().includes(this.search.toLowerCase())
-      );
-    }
-
-    if (this.categoriaSeleccionada) {
-      filtrados = filtrados.filter((p) =>
-        p.clasificacion === this.categoriaSeleccionada
-      );
-    }
-
-    if (this.precioMax > 0) {
-      filtrados = filtrados.filter((p) => p.precio <= this.precioMax);
-    }
-
-    this.productos = filtrados;
   }
 
   agregarAlCarrito(p: Producto) {
@@ -117,7 +112,7 @@ export class ListadoProductos implements OnInit {
 
     if (confirmado) {
       this.productosService.eliminarProducto(id).subscribe(() => {
-        this.cargarProductos();
+        this.aplicarFiltros();
       });
     }
   }

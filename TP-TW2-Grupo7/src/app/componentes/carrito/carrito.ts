@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { CarritoService, ItemCarrito } from '../../servicios/carrito';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { Producto } from '../../modelos/producto';
 
 @Component({
@@ -12,11 +12,11 @@ import { Producto } from '../../modelos/producto';
   templateUrl: './carrito.html',
   styleUrls: ['./carrito.css']
 })
-export class CarritoComponent implements OnInit {
+export class Carrito implements OnInit {
   items$: Observable<ItemCarrito[]>;
   total$: Observable<number>;
 
-  constructor(private carritoService: CarritoService) {
+  constructor(private carritoService: CarritoService, private router: Router) {
     this.items$ = this.carritoService.items$;
     this.total$ = this.carritoService.calcularTotal();
   }
@@ -35,9 +35,7 @@ export class CarritoComponent implements OnInit {
     this.carritoService.eliminarItem(idProducto);
   }
 
-  simularCompra() {
-    // falta logica de la compra
-    alert('¡Compra simulada con éxito! (WIP)');
-    this.carritoService.limpiarCarrito();
+  continuarCompra() {
+    this.router.navigate(['/compra']);
   }
 }

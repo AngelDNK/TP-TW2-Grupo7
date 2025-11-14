@@ -42,3 +42,24 @@ INSERT INTO productos (nombre, descripcion, clasificacion, precio) VALUES
 ('Refrigeración Líquida AIO 240mm', 'Sistema de refrigeración líquida All-In-One con radiador de 240mm, RGB.', 'Componentes PC', 86000),
 ('Altavoces Estéreo 2.0 de Escritorio', 'Altavoces compactos con sonido estéreo de alta calidad, conexión USB/Aux.', 'Audio', 50000),
 ('Cable HDMI 2.1 Ultra High Speed 2m', 'Soporta 4K@120Hz y 8K@60Hz, ancho de banda de 48Gbps.', 'Accesorios', 20000);
+
+CREATE TABLE pedidos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT NOT NULL,
+  fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  metodo_pago ENUM('efectivo', 'tarjeta') NOT NULL,
+  tipo_entrega ENUM('retiro', 'envio') NOT NULL,
+  datos_entrega JSON, /* Dirección o sucursal */
+  total DECIMAL(10, 2) NOT NULL,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
+CREATE TABLE pedido_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  pedido_id INT NOT NULL,
+  producto_id INT UNSIGNED NOT NULL,
+  cantidad INT NOT NULL,
+  precio_unitario DECIMAL(10, 2) NOT NULL,
+  FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE,
+  FOREIGN KEY (producto_id) REFERENCES productos(id)
+);

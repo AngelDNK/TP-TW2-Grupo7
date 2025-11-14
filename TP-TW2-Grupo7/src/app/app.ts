@@ -23,7 +23,7 @@ import { Observable } from 'rxjs';
           <div class="hidden md:flex items-center space-x-4">
             <ng-container *ngIf="authService.obtenerUsuarioLogueado(); else noLogueadoDesktop">
               <!-- Buscador -->
-              <!-- 
+              <!--
               <div class="flex-1 px-4 justify-start flex">
                 <input
                   type="text"
@@ -34,7 +34,16 @@ import { Observable } from 'rxjs';
                 />
               </div>
               -->
+
+              <!-- Mis pedidos -->
+
+              <a  *ngIf="authService.esCliente()" routerLink="/pedidos"
+                 class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer">
+                Mis pedidos
+              </a>
+
               <!-- Carrito -->
+
               <a *ngIf="authService.esCliente()"
                  routerLink="/carrito"
                  class="text-gray-300 hover:text-white relative mx-3"
@@ -93,7 +102,7 @@ import { Observable } from 'rxjs';
           <ng-container *ngIf="authService.obtenerUsuarioLogueado(); else noLogueadoMobile">
 
             <!-- Buscador en mobile -->
-            <div class="px-2 pt-2 pb-3">
+           <!-- <div class="px-2 pt-2 pb-3">
               <input
                 type="text"
                 class="w-full bg-slate-700 text-gray-200 placeholder-gray-400 px-4 py-2 rounded-md text-sm
@@ -101,9 +110,18 @@ import { Observable } from 'rxjs';
                 placeholder="Buscar producto..."
                 (input)="onSearchChange($event)"
               />
-            </div>
+            </div> -->
+
+
 
             <div class="px-2 pb-2 space-y-2">
+
+              <!-- Mis pedidos -->
+                <a *ngIf="authService.esCliente()" routerLink="/pedidos"
+                class="w-full flex items-center justify-between text-gray-200 bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded-md text-sm font-medium mt-2">
+                Mis pedidos
+                </a>
+
               <!-- Carrito -->
               <a *ngIf="authService.esCliente()"
                  routerLink="/carrito"

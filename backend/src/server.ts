@@ -15,11 +15,16 @@ import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth.routes';
 import productRoutes from './routes/producto.routes'; 
+import pedidoRoutes from './routes/pedido.routes';
 import { db } from './database/db';
+
 
 // Importar modelos para la sincronización
 import './models/user.model';
 import './models/producto.model';
+import './models/pedido.model';
+import './models/pedido-item.model';
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -35,6 +40,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/productos', productRoutes); 
+app.use('/api/pedidos', pedidoRoutes);
 
 const startServer = async () => {
   try {

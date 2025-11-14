@@ -5,10 +5,11 @@ import path from 'path';
 const envPath = path.resolve(__dirname, '../.env');
 dotenv.config({ path: envPath });
 
-// Log para verificar que se cargó correctamente
+/*
+PARA VER SI FUNCIONA EL RECUEPRAR CONTRASEÑA 
 console.log("📩 Archivo .env cargado desde:", envPath);
 console.log("📩 EMAIL_USER:", process.env.EMAIL_USER);
-console.log("📩 EMAIL_PASS:", process.env.EMAIL_PASS ? "CARGADA ✅" : "NO CARGADA ❌");
+console.log("📩 EMAIL_PASS:", process.env.EMAIL_PASS ? "CARGADA ✅" : "NO CARGADA ❌");*/
 
 import express from 'express';
 import cors from 'cors';

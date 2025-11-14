@@ -3,9 +3,11 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+/*
+PARA VER SI FUNCIONA EL RECUEPRAR CONTRASEÑA 
 console.log('📩 Variables cargadas:');
 console.log('EMAIL_USER:', process.env.EMAIL_USER);
-console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? '********' : 'NO DEFINIDA');
+console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? '********' : 'NO DEFINIDA');*/
 
 export async function sendRecoveryEmail(email: string, token: string) {
   const transporter = nodemailer.createTransport({

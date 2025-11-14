@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { FilterService } from './filter.service'; // AJUSTAR ruta según tu estructura
 
 // 🌐 URL base del backend
 const API_URL = 'http://localhost:3000/api/auth';
@@ -24,7 +25,7 @@ export interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,  private filterService: FilterService) {}
 
   // 🔹 LOGIN
   login(data: { email: string; password: string }): Observable<AuthResponse> {
@@ -68,5 +69,6 @@ export class AuthService {
   // 🔹 Logout
   logout(): void {
     localStorage.removeItem('usuario');
+    this.filterService.limpiarFiltros();
   }
 }

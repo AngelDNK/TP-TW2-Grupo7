@@ -17,4 +17,9 @@ export class Pedidos {
   constructor(private pedidoService: PedidoService) {
     this.pedidos$ = this.pedidoService.listar();
   }
+  imgError(event: Event, nombre: string) {
+  const img = event.target as HTMLImageElement;
+  img.src = `https://placehold.co/60x60/333/ccc?text=${nombre.substring(0,3)}`;
+}
+
 }

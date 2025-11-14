@@ -23,6 +23,11 @@ export class Carrito implements OnInit {
 
   ngOnInit(): void { }
 
+  imgErrorCarrito(event: Event, nombre: string) {
+  const img = event.target as HTMLImageElement;
+  img.src = `https://placehold.co/200x200/eeeeee/999999?text=${nombre}`;
+}
+
   incrementar(producto: Producto) {
     this.carritoService.agregarProducto(producto);
   }

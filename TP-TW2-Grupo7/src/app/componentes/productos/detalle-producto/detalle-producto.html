@@ -27,8 +27,12 @@
 
   <div class="bg-slate-800 rounded-lg shadow-2xl overflow-hidden lg:grid lg:grid-cols-2 lg:gap-8">
     <div class="p-4 sm:p-8">
-      <img [src]="'https://placehold.co/600x600/eeeeee/999999?text=' + producto.nombre" [alt]="producto.nombre"
-        class="w-full h-auto object-cover rounded-lg shadow-md">
+    <img
+  [src]="producto.imagen"
+  [alt]="producto.nombre"
+  class="w-full h-auto object-cover rounded-lg shadow-md"
+/>
+
     </div>
     <div class="p-6 sm:p-8 flex flex-col">
       <div class="flex-grow">

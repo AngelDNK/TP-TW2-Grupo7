@@ -23,6 +23,7 @@
     "@types/bcrypt": "^6.0.0",
     "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
+    "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.4",
     "@types/node": "^24.9.1",
     "@types/nodemailer": "^7.0.3",

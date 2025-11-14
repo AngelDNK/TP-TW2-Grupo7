@@ -7,6 +7,7 @@ export interface ProductoAttributes {
   descripcion: string;
   clasificacion: string;
   precio: number;
+  imagen:string;
 }
 
 interface ProductoCreationAttributes extends Optional<ProductoAttributes, 'id'> {}
@@ -17,6 +18,7 @@ export class Producto extends Model<ProductoAttributes, ProductoCreationAttribut
   public descripcion!: string;
   public clasificacion!: string;
   public precio!: number;
+  public imagen!: string;
 }
 
 Producto.init(
@@ -46,6 +48,11 @@ Producto.init(
         min: 0, 
       },
     },
+    imagen: {
+  type: DataTypes.TEXT('long'), // para Base64 largos
+  allowNull: false
+},
+
   },
   {
     tableName: 'productos',

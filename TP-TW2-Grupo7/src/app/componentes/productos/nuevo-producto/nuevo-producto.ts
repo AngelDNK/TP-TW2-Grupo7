@@ -30,8 +30,26 @@ export class NuevoProducto implements OnInit {
       descripcion: ['', Validators.required],
       clasificacion: ['', Validators.required],
       precio: [0, [Validators.required, Validators.min(1)]],
+      imagen: ['', Validators.required],
     });
   }
+
+
+  onFileSelected(event: any) {
+  const file: File = event.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    const base64String = reader.result as string;
+    this.form.patchValue({ imagen: base64String });
+  };
+
+  reader.readAsDataURL(file);
+}
+
 
   guardar() {
     this.mensaje = '';

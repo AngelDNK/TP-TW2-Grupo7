@@ -4,11 +4,11 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { sendRecoveryEmail } from '../utils/emailHelper';
 
-// 🔹 Mapa temporal para guardar los tokens generados (email <-> token)
+// mapa temporal para guardar los tokens generados (email <-> token)
 const passwordResetTokens = new Map<string, string>();
 
 export const AuthController = {
-  // 🔹 Iniciar sesión
+  // Iniciar sesión
   signin: async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body;
@@ -40,7 +40,7 @@ export const AuthController = {
     }
   },
 
-  // 🔹 Registrar usuario
+  // Registrar usuario
   signup: async (req: Request, res: Response) => {
     try {
       const { nombre, apellido, direccion, email, password } = req.body;
@@ -75,7 +75,7 @@ export const AuthController = {
     }
   },
 
-  // 🔹 Recuperar contraseña (envía correo real)
+  // Recuperar contraseña (envía correo real)
   recuperar: async (req: Request, res: Response) => {
     try {
       const { email } = req.body;
@@ -100,7 +100,7 @@ export const AuthController = {
     }
   },
 
-  // 🔹 Restablecer contraseña
+  // Restablecer contraseña
   resetPassword: async (req: Request, res: Response) => {
     try {
       const { token, nuevaPassword } = req.body;

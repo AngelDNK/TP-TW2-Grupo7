@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CarritoService, ItemCarrito } from '../../servicios/carrito';
 import { PedidoService } from '../../servicios/pedido';
 import { Observable, Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-compra',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, CurrencyPipe],
+  imports: [CommonModule, ReactiveFormsModule, CurrencyPipe],
   templateUrl: './compra.html'
 })
 export class Compra implements OnInit {
@@ -35,7 +36,8 @@ export class Compra implements OnInit {
     private fb: FormBuilder,
     private carrito: CarritoService,
     private pedidoService: PedidoService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {
     this.cartItems$ = this.carrito.items$;
     this.total$ = this.carrito.calcularTotal();
@@ -63,18 +65,18 @@ export class Compra implements OnInit {
   }
 
 
- elegirPago(metodo: string) {
-  this.compra.metodoPago = metodo;
+  elegirPago(metodo: string) {
+    this.compra.metodoPago = metodo;
 
-  if (metodo === 'efectivo') {
-    // Solo retiro disponible
-    this.compra.tipoEntrega = 'retiro';
-    this.step = 4; // va directo a elegir sucursal
-  } else {
-    // Tarjeta → puede elegir envío o retiro
-    this.step = 3;
+    if (metodo === 'efectivo') {
+      // Solo retiro disponible
+      this.compra.tipoEntrega = 'retiro';
+      this.step = 4; // va directo a elegir sucursal
+    } else {
+      // Tarjeta → puede elegir envío o retiro
+      this.step = 3;
+    }
   }
-}
 
 
   procesarTarjeta() {
@@ -118,7 +120,7 @@ export class Compra implements OnInit {
     };
 
     this.pedidoService.crear(pedido).subscribe(() => {
-      alert('¡Compra realizada!');
+      this.toastr.success('¡Compra Realizada!');
       this.carrito.limpiarCarrito();
       this.router.navigate(['/pedidos']);
     });

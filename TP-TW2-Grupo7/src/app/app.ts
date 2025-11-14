@@ -65,7 +65,7 @@ import { Observable } from 'rxjs';
 
               <!-- Botón Cerrar Sesión -->
               <a (click)="logout()"
-                 class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer">
+                 class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer m-0">
                 Cerrar sesión
               </a>
             </ng-container>

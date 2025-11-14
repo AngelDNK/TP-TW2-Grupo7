@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
 
-export const db = new Sequelize('tp_taller_web2', 'root', '1234', {
+export const db = new Sequelize('tp_taller_web2', 'root', 'Karasuno25.', {
   host: 'localhost',
   dialect: 'mysql',
 });

@@ -12,8 +12,9 @@ import { ListadoProductos } from './componentes/productos/listado-productos/list
 import { DetalleProducto } from './componentes/productos/detalle-producto/detalle-producto';
 import { NuevoProducto } from './componentes/productos/nuevo-producto/nuevo-producto';
 import {EditarProducto} from './componentes/productos/editar-producto/editar-producto'
-import { CarritoComponent } from './componentes/carrito/carrito';
-
+import { Carrito} from './componentes/carrito/carrito';
+import { Compra} from './componentes/compra/compra';
+import { Pedidos} from './componentes/pedidos/pedidos';
 
 export const routes: Routes = [
      { path: '', redirectTo: 'productos', pathMatch: 'full' },
@@ -26,5 +27,7 @@ export const routes: Routes = [
      { path: 'nuevo-producto', component: NuevoProducto},
      { path: 'editar-producto', component: EditarProducto},
      { path: 'editar-producto/:id', component: EditarProducto},
-     { path: 'carrito', component: CarritoComponent}
+     { path: 'carrito', component: Carrito},
+     { path: 'compra', component: Compra},
+     { path: 'pedidos', component: Pedidos}
 ];

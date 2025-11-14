@@ -23,6 +23,7 @@ import { Observable } from 'rxjs';
           <div class="hidden md:flex items-center space-x-4">
             <ng-container *ngIf="authService.obtenerUsuarioLogueado(); else noLogueadoDesktop">
               <!-- Buscador -->
+              <!-- 
               <div class="flex-1 px-4 justify-start flex">
                 <input
                   type="text"
@@ -32,7 +33,7 @@ import { Observable } from 'rxjs';
                   (input)="onSearchChange($event)"
                 />
               </div>
-
+              -->
               <!-- Carrito -->
               <a *ngIf="authService.esCliente()"
                  routerLink="/carrito"

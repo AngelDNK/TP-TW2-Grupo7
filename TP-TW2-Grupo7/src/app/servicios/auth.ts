@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { FilterService } from './filter.service'; // AJUSTAR ruta según tu estructura
 
 // 🌐 URL base del backend
 const API_URL = 'http://localhost:3000/api/auth';
@@ -24,7 +25,7 @@ export interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,  private filterService: FilterService) {}
 
   // 🔹 LOGIN
   login(data: { email: string; password: string }): Observable<AuthResponse> {
@@ -41,16 +42,20 @@ export class AuthService {
     return this.http.post<{ message: string }>(`${API_URL}/recuperar`, data);
   }
 
+  // 🔹 RESTABLECER CONTRASEÑA (para el link del email)
+  resetPassword(data: { token: string; nuevaPassword: string }): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${API_URL}/reset-password`, data);
+  }
+
+  // 🔹 Obtener usuario logueado
   obtenerUsuarioLogueado(): User | null {
     if (typeof window === 'undefined') return null;
 
     const usuarioStorage = localStorage.getItem('usuario');
-    if (usuarioStorage) {
-      return JSON.parse(usuarioStorage) as User;
-    }
-    return null;
+    return usuarioStorage ? (JSON.parse(usuarioStorage) as User) : null;
   }
 
+  // 🔹 Roles (en caso de necesitarlo en el futuro)
   esAdmin(): boolean {
     const usuario = this.obtenerUsuarioLogueado();
     return usuario ? usuario.rol === 'admin' : false;
@@ -61,9 +66,9 @@ export class AuthService {
     return usuario ? usuario.rol === 'cliente' : false;
   }
 
-
+  // 🔹 Logout
   logout(): void {
     localStorage.removeItem('usuario');
-
+    this.filterService.limpiarFiltros();
   }
 }

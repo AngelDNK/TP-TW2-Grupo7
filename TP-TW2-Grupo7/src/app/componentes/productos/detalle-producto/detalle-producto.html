@@ -1,22 +1,76 @@
-<div class="container mt-4" *ngIf="producto; else noEncontrado">
-  <h2 class="mb-3">Detalle del producto</h2>
-
-  <div class="card shadow-sm p-4">
-    <h3>{{ producto.nombre }}</h3>
-    <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
-    <p><strong>Clasificación:</strong> {{ producto.clasificacion }}</p>
-    <p><strong>Precio:</strong> $ {{ producto.precio | number:'1.0-0' }}</p>
+<div class="container mx-auto p-4 md:p-8">
+  @if (isLoading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
   </div>
-  <a *ngIf="authService.esAdmin()" routerLink="/editar-producto" class="btn btn-secondary">Editar</a>
-  <a routerLink="/productos" class="btn btn-secondary mt-3">Volver al listado</a>
-</div>
+  }
 
-<ng-template #noEncontrado>
-  <div class="container mt-4">
-    <div class="alert alert-danger">
-      Producto no encontrado
+  @else if (errorMensaje) {
+  <div class="flex flex-col justify-center items-center h-96 gap-4">
+    <p class="text-2xl text-red-500 font-semibold">{{ errorMensaje }}</p>
+    <a routerLink="/productos" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+      Volver al listado
+    </a>
+  </div>
+  }
+
+  @else if (producto) {
+  <a routerLink="/productos"
+    class="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors mb-6 group">
+    <svg class="w-5 h-5 mr-2 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor"
+      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+      </path>
+    </svg>
+    Volver al listado
+  </a>
+
+  <div class="bg-slate-800 rounded-lg shadow-2xl overflow-hidden lg:grid lg:grid-cols-2 lg:gap-8">
+    <div class="p-4 sm:p-8">
+      <img [src]="'https://placehold.co/600x600/eeeeee/999999?text=' + producto.nombre" [alt]="producto.nombre"
+        class="w-full h-auto object-cover rounded-lg shadow-md">
     </div>
-    <a routerLink="/productos" class="btn btn-secondary">Volver</a>
+    <div class="p-6 sm:p-8 flex flex-col">
+      <div class="flex-grow">
 
+        <h1 class="text-3xl lg:text-4xl font-bold text-white mb-4">
+          {{ producto.nombre }}
+        </h1>
+        <p class="text-4xl font-extrabold text-green-500 mb-6">
+          $ {{ producto.precio | number:'1.0-0' }}
+        </p>
+
+        <div class="mb-6">
+          <h2 class="text-lg font-semibold text-white mb-2">Descripción</h2>
+          <p class="text-gray-300 leading-relaxed">
+            {{ producto.descripcion }}
+          </p>
+        </div>
+
+        <div class="mb-8">
+          <p class="text-gray-400">
+            <strong class="text-white">Clasificación:</strong> {{ producto.clasificacion }}
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <a *ngIf="authService.esAdmin()" [routerLink]="['/editar-producto', producto.id]"
+          class="w-full text-center bg-yellow-500 text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-yellow-600 transition-colors text-lg inline-block">
+          Editar Producto
+        </a>
+
+        <button *ngIf="authService.esCliente()"
+          class="w-full text-center bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition-colors"
+          (click)="agregarAlCarrito(producto)">
+          Agregar al carrito
+        </button>
+      </div>
+    </div>
   </div>
-</ng-template>
+  } @else {
+  <div class="flex justify-center items-center h-96">
+    <p class="text-lg text-gray-500">No se pudo cargar el producto.</p>
+  </div>
+  }
+</div>

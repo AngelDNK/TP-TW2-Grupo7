@@ -1,14 +1,19 @@
 import { Request, Response } from 'express';
 import { User } from '../models/user.model';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+import { sendRecoveryEmail } from '../utils/emailHelper';
+
+// 🔹 Mapa temporal para guardar los tokens generados (email <-> token)
+const passwordResetTokens = new Map<string, string>();
 
 export const AuthController = {
   // 🔹 Iniciar sesión
   signin: async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body;
-
       const user = await User.findOne({ where: { email } });
+
       if (!user) {
         return res.status(401).json({ message: 'Credenciales incorrectas' });
       }
@@ -24,27 +29,26 @@ export const AuthController = {
           id: user.id,
           nombre: user.nombre,
           apellido: user.apellido,
+          direccion: user.direccion,
+          email: user.email,
           rol: user.rol
         }
       });
     } catch (error) {
+      console.error('❌ Error en signin:', error);
       res.status(500).json({ message: 'Error del servidor' });
     }
   },
 
   // 🔹 Registrar usuario
   signup: async (req: Request, res: Response) => {
-    console.log("entro pa");
-
     try {
       const { nombre, apellido, direccion, email, password } = req.body;
 
-      // Validar complejidad mínima (mayúscula, minúscula, número, 8+ caracteres)
       const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
       if (!regex.test(password)) {
         return res.status(400).json({
-          message:
-            'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.'
+          message: 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.'
         });
       }
 
@@ -54,7 +58,6 @@ export const AuthController = {
       }
 
       const passwordHash = await bcrypt.hash(password, 10);
-
       const nuevo = await User.create({
         nombre,
         apellido,
@@ -64,39 +67,69 @@ export const AuthController = {
         rol: 'cliente'
       });
 
-      console.log('✅ Usuario cliente registrado:', nuevo.email);
-      res.status(201).json({
-        message: 'Usuario registrado exitosamente',
-        user: {
-          id: nuevo.id,
-          nombre: nuevo.nombre,
-          apellido: nuevo.apellido,
-          rol: nuevo.rol
-        }
-      });
+      console.log('✅ Usuario registrado:', nuevo.email);
+      res.status(201).json({ message: 'Usuario registrado exitosamente' });
     } catch (error) {
       console.error('❌ Error en signup:', error);
       res.status(500).json({ message: 'Error del servidor' });
     }
   },
 
-  // 🔹 Recuperar contraseña
+  // 🔹 Recuperar contraseña (envía correo real)
   recuperar: async (req: Request, res: Response) => {
     try {
       const { email } = req.body;
-      console.log(`📧 [POST] /recuperar — email: ${email}`);
-
       const user = await User.findOne({ where: { email } });
 
       if (!user) {
-        console.log('❌ Correo no encontrado');
         return res.status(404).json({ message: 'Correo no encontrado' });
       }
 
-      console.log('📨 Simulación de envío de correo:', email);
-      res.json({ message: 'Correo de recuperación enviado (simulado)' });
+      // Generar token único
+      const token = crypto.randomBytes(32).toString('hex');
+      passwordResetTokens.set(token, email);
+
+      // Enviar correo real con Nodemailer
+      await sendRecoveryEmail(email, token);
+
+      console.log(`📨 Token generado para ${email}: ${token}`);
+      res.json({ message: 'Correo de recuperación enviado con éxito' });
     } catch (error) {
       console.error('❌ Error en recuperar:', error);
+      res.status(500).json({ message: 'Error del servidor' });
+    }
+  },
+
+  // 🔹 Restablecer contraseña
+  resetPassword: async (req: Request, res: Response) => {
+    try {
+      const { token, nuevaPassword } = req.body;
+
+      if (!token || !nuevaPassword) {
+        return res.status(400).json({ message: 'Datos incompletos' });
+      }
+
+      const email = passwordResetTokens.get(token);
+      if (!email) {
+        return res.status(400).json({ message: 'Token inválido o expirado' });
+      }
+
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+
+      const hash = await bcrypt.hash(nuevaPassword, 10);
+      user.password = hash;
+      await user.save();
+
+      // Eliminar token usado
+      passwordResetTokens.delete(token);
+
+      console.log(`🔐 Contraseña restablecida para ${email}`);
+      res.json({ message: 'Contraseña restablecida exitosamente' });
+    } catch (error) {
+      console.error('❌ Error en resetPassword:', error);
       res.status(500).json({ message: 'Error del servidor' });
     }
   }

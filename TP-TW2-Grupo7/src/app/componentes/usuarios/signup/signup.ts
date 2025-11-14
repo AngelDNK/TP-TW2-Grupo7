@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../servicios/auth';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './signup.html',
   styleUrls: ['./signup.css']
 })
@@ -15,6 +15,7 @@ export class Signup {
   form: any;
   mensaje = '';
   tipoMensaje = '';
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -38,25 +39,25 @@ export class Signup {
 
   registrar() {
     if (this.form.valid) {
+      this.isLoading = true;
       const { nombre, apellido, direccion, email, password } = this.form.value;
 
       this.auth.signup({ nombre, apellido, direccion, email, password }).subscribe({
         next: (res) => {
           this.mensaje = res.message || 'Usuario registrado correctamente';
           this.tipoMensaje = 'success';
-
-          // ✅ Limpiar formulario
           this.form.reset();
 
-          // ✅ Redirigir al login después de 2 segundos
           setTimeout(() => {
             this.router.navigate(['/signin']);
+            this.isLoading = false;
           }, 2000);
         },
         error: (err) => {
           console.error(err);
           this.mensaje = err.error?.message || 'Error al registrar usuario';
           this.tipoMensaje = 'danger';
+          this.isLoading = false;
         }
       });
     } else {

@@ -25,5 +25,6 @@ export const routes: Routes = [
      { path: 'producto/:id', component: DetalleProducto},
      { path: 'nuevo-producto', component: NuevoProducto},
      { path: 'editar-producto', component: EditarProducto},
+     { path: 'editar-producto/:id', component: EditarProducto},
      { path: 'carrito', component: CarritoComponent}
 ];

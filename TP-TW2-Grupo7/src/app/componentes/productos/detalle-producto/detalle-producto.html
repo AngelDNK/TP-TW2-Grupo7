@@ -5,7 +5,6 @@
   </div>
   }
 
-  <!-- 2. Estado de Error -->
   @else if (errorMensaje) {
   <div class="flex flex-col justify-center items-center h-96 gap-4">
     <p class="text-2xl text-red-500 font-semibold">{{ errorMensaje }}</p>
@@ -56,7 +55,7 @@
       </div>
 
       <div class="space-y-4">
-        <a *ngIf="authService.esAdmin()" routerLink="/editar-producto"
+        <a *ngIf="authService.esAdmin()" [routerLink]="['/editar-producto', producto.id]"
           class="w-full text-center bg-yellow-500 text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-yellow-600 transition-colors text-lg inline-block">
           Editar Producto
         </a>

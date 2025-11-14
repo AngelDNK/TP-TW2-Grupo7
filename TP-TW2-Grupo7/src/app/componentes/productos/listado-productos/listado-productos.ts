@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductosService } from '../../../servicios/productos';
 import { Producto } from '../../../modelos/producto';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../servicios/auth';
 import { CarritoService } from '../../../servicios/carrito';
 import { FilterService, Filtros } from '../../../servicios/filter.service';
@@ -19,10 +19,9 @@ export class ListadoProductos implements OnInit {
   productos: Producto[] = [];
   todosLosProductos: Producto[] = [];
   categorias: string[] = [];
+  private router = inject(Router);
   isLoading = true;
   errorMensaje = '';
-
-  // 🔹 Variables del filtro
   search = '';
   categoriaSeleccionada = '';
   precioMax = 0;
@@ -31,8 +30,10 @@ export class ListadoProductos implements OnInit {
     private productosService: ProductosService,
     public authService: AuthService,
     private carritoService: CarritoService,
+
     private filterService: FilterService
-  ) {}
+  ) { }
+
 
   ngOnInit(): void {
     this.cargarProductos();
@@ -63,6 +64,12 @@ export class ListadoProductos implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  verDetalle(id: number | undefined) {
+    if (id) {
+      this.router.navigate(['/producto', id]);
+    }
   }
 
   // 🔹 Guarda filtros y los aplica
@@ -107,6 +114,7 @@ export class ListadoProductos implements OnInit {
     if (!id) return;
 
     const confirmado = true;
+
     if (confirmado) {
       this.productosService.eliminarProducto(id).subscribe(() => {
         this.cargarProductos();

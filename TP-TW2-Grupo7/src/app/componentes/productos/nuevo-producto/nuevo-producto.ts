@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; 
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProductosService } from '../../../servicios/productos';
@@ -12,16 +12,17 @@ import { Producto } from '../../../modelos/producto';
   templateUrl: './nuevo-producto.html',
   styleUrls: ['./nuevo-producto.css'],
 })
+
 export class NuevoProducto implements OnInit {
   mensaje = '';
   tipoMensaje = '';
-  form!: FormGroup; 
+  form!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private productosService: ProductosService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -33,7 +34,7 @@ export class NuevoProducto implements OnInit {
   }
 
   guardar() {
-    this.mensaje = ''; 
+    this.mensaje = '';
     this.form.markAllAsTouched();
 
     if (this.form.invalid) {
@@ -56,7 +57,7 @@ export class NuevoProducto implements OnInit {
       error: (err) => {
         console.error('Error al crear el producto:', err);
         this.mensaje = '❌ Error al guardar el producto. Verifique los datos o intente más tarde.';
-        this.tipoMensaje = 'error'; 
+        this.tipoMensaje = 'error';
       }
     });
   }

@@ -1,80 +1,35 @@
 import { Request, Response } from 'express';
-import { db } from '../database/db';
-import { Pedido } from '../models/pedido.model';
-import { PedidoItem } from '../models/pedido-item.model';
-import { Producto } from '../models/producto.model';
 import { RequestConUsuario } from '../middleware/auth.middleware';
+import { PedidoService } from '../service/pedido.service';
 
+const pedidoService = new PedidoService();
 
 export const crearPedido = async (req: Request, res: Response) => {
-  const reqConUsuario = req as RequestConUsuario;
+  const usuario_id = (req as RequestConUsuario).usuario_id;
 
-  const t = await db.transaction();
-  
-  const usuario_id = reqConUsuario.usuario_id;
-  
   if (!usuario_id) {
-    await t.rollback();
-    return res.status(401).json({ message: 'No autorizado. ID de usuario no encontrado.' });
+    return res.status(401).json({ message: 'No autorizado' });
   }
 
-  const { items, metodo_pago, tipo_entrega, datos_entrega } = req.body;
-
   try {
-    let total = 0;
-    const itemsDB = [];
-
-    for (const item of items) {
-      const producto = await Producto.findByPk(item.producto_id);
-      if (producto) {
-        total += producto.precio * item.cantidad;
-        itemsDB.push({
-          producto_id: producto.id,
-          cantidad: item.cantidad,
-          precio_unitario: producto.precio
-        });
-      }
-    }
-
-    const pedido = await Pedido.create({
-      usuario_id,
-      metodo_pago,
-      tipo_entrega,
-      datos_entrega,
-      total
-    }, { transaction: t });
-
-    await PedidoItem.bulkCreate(
-      itemsDB.map(i => ({ ...i, pedido_id: pedido.id })),
-      { transaction: t }
-    );
-
-    await t.commit();
+    const pedido = await pedidoService.crearPedido(usuario_id, req.body);
     res.status(201).json({ message: 'Pedido guardado', id: pedido.id });
-
   } catch (error) {
-    await t.rollback();
     res.status(500).json({ message: 'Error al guardar pedido', error });
   }
 };
 
 export const obtenerPedidos = async (req: Request, res: Response) => {
-  const reqConUsuario = req as RequestConUsuario;
-  const usuario_id = reqConUsuario.usuario_id;
+  const usuario_id = (req as RequestConUsuario).usuario_id;
 
   if (!usuario_id) {
-    return res.status(401).json({ message: 'No autorizado. ID de usuario no encontrado.' });
+    return res.status(401).json({ message: 'No autorizado' });
   }
 
   try {
-    const pedidos = await Pedido.findAll({
-      where: { usuario_id },
-      include: [{ model: PedidoItem, include: [Producto] }],
-      order: [['fecha', 'DESC']]
-    });
+    const pedidos = await pedidoService.obtenerPedidos(usuario_id);
     res.json(pedidos);
   } catch (error) {
-    console.error('❌ Error al obtener pedidos:', error); 
     res.status(500).json({ message: 'Error al obtener pedidos' });
   }
 };

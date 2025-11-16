@@ -11,11 +11,6 @@ CREATE TABLE usuarios (
   rol ENUM('admin', 'cliente') NOT NULL DEFAULT 'cliente'
 );
 
-INSERT INTO usuarios (nombre, apellido, direccion, email, password, rol)
-VALUES
-('Administrador', 'Principal', 'Oficina Central', 'admin@gmail.com', '$2b$10$zCw5yAS3ti/7hDk3xWQHIuxVnK8E/6eRzWUgIruN6xT7b5iUt4Sje', 'admin');
-
-/* LA CONTRASEÑIA DEL ADMIN ES Password123 */
 
 
 CREATE TABLE productos (

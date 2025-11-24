@@ -9,7 +9,6 @@ import {
 
 const router = Router();
 
-// Definicion de los endpoints para productos
 router.get('/', listarProductos);
 router.get('/:id', obtenerProductoPorId);
 router.post('/', crearProducto);

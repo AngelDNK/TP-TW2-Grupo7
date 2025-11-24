@@ -5,7 +5,7 @@ import { AuthService, AuthResponse } from '../../../servicios/auth';
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-signin',
+  selector: 'app-signin',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './signin.html',
@@ -28,8 +28,8 @@ export class Signin {
         '',
         [
           Validators.required,
-         
-        ]
+
+]
       ]
     });
   }

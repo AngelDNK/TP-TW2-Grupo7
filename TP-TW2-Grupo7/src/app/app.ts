@@ -13,38 +13,24 @@ import { authInterceptor } from './servicios/auth.interceptor';
   standalone: true,
   imports: [RouterOutlet, RouterLink, CommonModule],
   template: `
-    <!-- INICIO: Navbar -->
+    
     <nav class="fixed w-full top-0 z-50 glass-effect md:p-0">
       <div class="container mx-auto px-4">
         <div class="flex justify-between items-center h-16">
-          <!-- Logo -->
+          
           <a class="text-xl font-bold text-white md:block hidden" routerLink="/">TP Taller Web 2 - Grupo 7</a>
           <a class="text-xl font-bold text-white md:hidden block" routerLink="/">TW2 - Grupo 7</a>
 
-          <!-- Desktop: acciones (md y arriba) -->
+          
           <div class="hidden md:flex items-center space-x-4">
             <ng-container *ngIf="authService.obtenerUsuarioLogueado(); else noLogueadoDesktop">
-              <!-- Buscador -->
-              <!--
-              <div class="flex-1 px-4 justify-start flex">
-                <input
-                  type="text"
-                  class="w-full bg-slate-700 text-gray-200 placeholder-gray-400 px-4 py-2 rounded-md text-sm
-                         focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Buscar producto..."
-                  (input)="onSearchChange($event)"
-                />
-              </div>
-              -->
-
-              <!-- Mis pedidos -->
-
+            
               <a  *ngIf="authService.esCliente()" routerLink="/pedidos"
                  class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer">
                 Mis pedidos
               </a>
 
-              <!-- Carrito -->
+              
 
               <a *ngIf="authService.esCliente()"
                  routerLink="/carrito"
@@ -65,7 +51,7 @@ import { authInterceptor } from './servicios/auth.interceptor';
                 <ng-template #noItemsDesktop></ng-template>
               </a>
 
-              <!-- Botón Cerrar Sesión -->
+              
               <a (click)="logout()"
                  class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer m-0">
                 Cerrar sesión
@@ -84,7 +70,7 @@ import { authInterceptor } from './servicios/auth.interceptor';
             </ng-template>
           </div>
 
-          <!-- Mobile/Tablet: botón hamburguesa (md:hidden) -->
+         
           <button
             class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-white hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
             type="button"
@@ -98,33 +84,23 @@ import { authInterceptor } from './servicios/auth.interceptor';
           </button>
         </div>
 
-        <!-- Mobile/Tablet: menú desplegable -->
+        
         <div *ngIf="isMenuOpen" class="md:hidden border-t border-slate-700">
-          <!-- Logueado -->
+         
           <ng-container *ngIf="authService.obtenerUsuarioLogueado(); else noLogueadoMobile">
 
-            <!-- Buscador en mobile -->
-           <!-- <div class="px-2 pt-2 pb-3">
-              <input
-                type="text"
-                class="w-full bg-slate-700 text-gray-200 placeholder-gray-400 px-4 py-2 rounded-md text-sm
-                       focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Buscar producto..."
-                (input)="onSearchChange($event)"
-              />
-            </div> -->
-
+            
 
 
             <div class="px-2 pb-2 space-y-2">
 
-              <!-- Mis pedidos -->
+              
                 <a *ngIf="authService.esCliente()" routerLink="/pedidos"
                 class="w-full flex items-center justify-between text-gray-200 bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded-md text-sm font-medium mt-2">
                 Mis pedidos
                 </a>
 
-              <!-- Carrito -->
+              
               <a *ngIf="authService.esCliente()"
                  routerLink="/carrito"
                  (click)="closeMenu()"
@@ -147,7 +123,7 @@ import { authInterceptor } from './servicios/auth.interceptor';
                 </span>
               </a>
 
-              <!-- Cerrar sesión -->
+              
               <button
                 (click)="logout(true)"
                 class="w-full text-left text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium">
@@ -156,7 +132,7 @@ import { authInterceptor } from './servicios/auth.interceptor';
             </div>
           </ng-container>
 
-          <!-- No logueado -->
+          
           <ng-template #noLogueadoMobile>
             <div class="px-2 pt-2 pb-3 space-y-2">
               <a routerLink="/signin"
@@ -175,10 +151,10 @@ import { authInterceptor } from './servicios/auth.interceptor';
       </div>
     </nav>
 
-    <!-- Contenido -->
+    
     <router-outlet></router-outlet>
 
-    <!-- FOOTER -->
+    
     <footer class="bg-slate-800 text-gray-300 text-center py-4 mt-6">
       BARREGO, LEANDRO -
       DANGELO, AGUSTIN -

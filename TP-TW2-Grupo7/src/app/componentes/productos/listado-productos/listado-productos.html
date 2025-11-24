@@ -1,7 +1,7 @@
 <div class="container text-white mx-auto p-4 md:p-8">
   <h2 class="text-3xl font-bold mb-8">Listado de productos</h2>
 
-  <!-- FILTROS -->
+  
   <div class="row mb-4">
     <div class="col-md-4 mb-2">
       <label class="form-label fw-bold">Categoría</label>
@@ -39,7 +39,7 @@
   </div>
 
 
-  <!-- Si hay productos -->
+  
   <div *ngIf="productos.length > 0; else sinProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     @for (p of productos; track p.id) {
     <div (click)="verDetalle(p.id)"

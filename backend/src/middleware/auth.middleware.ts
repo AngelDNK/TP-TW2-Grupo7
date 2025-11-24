@@ -18,7 +18,7 @@ export const verificarToken = (req: Request, res: Response, next: NextFunction) 
   try {
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
-      console.error('❌ JWT_SECRET no está definida en .env');
+      console.error('JWT_SECRET no está definida en .env');
       throw new Error('Error de configuración del servidor');
     }
     
@@ -28,7 +28,7 @@ export const verificarToken = (req: Request, res: Response, next: NextFunction) 
     
     next(); 
   } catch (error) {
-    console.error('❌ Error al verificar token:', error);
+    console.error('Error al verificar token:', error);
     res.status(403).json({ message: 'Token inválido o expirado' });
   }
 };

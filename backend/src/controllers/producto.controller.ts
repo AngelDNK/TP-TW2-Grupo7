@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { ProductoRepositorio } from '../repository/producto.repository';
 
-// -----------------------------------------------------
 
 export const listarProductos = async (req: Request, res: Response) => {
   try {

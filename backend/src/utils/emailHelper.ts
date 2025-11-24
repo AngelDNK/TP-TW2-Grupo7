@@ -35,9 +35,9 @@ export async function sendRecoveryEmail(email: string, token: string) {
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ Correo enviado correctamente a ${email} (ID: ${info.messageId})`);
+    console.log(`Correo enviado correctamente a ${email} (ID: ${info.messageId})`);
   } catch (error) {
-    console.error('❌ Error al enviar el correo:', error);
+    console.error('Error al enviar el correo:', error);
     throw new Error('No se pudo enviar el correo de recuperación');
   }
 }

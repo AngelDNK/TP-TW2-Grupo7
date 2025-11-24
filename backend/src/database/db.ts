@@ -5,13 +5,13 @@ export const db = new Sequelize("tp_taller_web2", "root", "", {
   dialect: "mysql",
 });
 
-// Verificamos la conexión al iniciar
+// PARA VERIFICAR SI FUNCIONA LA CONEXION DE LA BDD
 export async function conectarDB() {
   try {
     await db.authenticate();
-    console.log("✅ Conexión con MySQL establecida correctamente");
+    console.log("Conexión con MySQL establecida correctamente");
   } catch (error) {
-    console.error("❌ Error al conectar con la base de datos:", error);
+    console.error("Error al conectar con la base de datos:", error);
   }
 }
 

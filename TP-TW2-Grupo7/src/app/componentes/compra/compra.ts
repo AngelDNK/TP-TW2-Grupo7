@@ -69,11 +69,11 @@ export class Compra implements OnInit {
     this.compra.metodoPago = metodo;
 
     if (metodo === 'efectivo') {
-      // Solo retiro disponible
+      
       this.compra.tipoEntrega = 'retiro';
-      this.step = 4; // va directo a elegir sucursal
+      this.step = 4; 
     } else {
-      // Tarjeta → puede elegir envío o retiro
+     
       this.step = 3;
     }
   }

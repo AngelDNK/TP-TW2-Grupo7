@@ -97,7 +97,7 @@ export class EditarProducto implements OnInit {
     this.form.markAllAsTouched();
 
     if (this.form.invalid) {
-      this.mensaje = '⚠️ Complete todos los campos correctamente';
+      this.mensaje = 'Complete todos los campos correctamente';
       this.tipoMensaje = 'warning';
       return;
     }
@@ -106,7 +106,7 @@ export class EditarProducto implements OnInit {
 
     this.productosService.actualizarProducto(this.productoId, productoEditado).subscribe({
       next: () => {
-        this.mensaje = '✅ Producto actualizado con éxito';
+        this.mensaje = 'Producto actualizado con éxito';
         this.tipoMensaje = 'success';
 
         setTimeout(() => {
@@ -115,7 +115,7 @@ export class EditarProducto implements OnInit {
       },
       error: (err) => {
         console.error('Error al actualizar el producto:', err);
-        this.mensaje = '❌ Error al actualizar el producto.';
+        this.mensaje = 'Error al actualizar el producto.';
         this.tipoMensaje = 'error';
       }
     });

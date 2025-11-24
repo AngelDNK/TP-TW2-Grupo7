@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 
-//COSAS DE USUARIO
+/*COSAS DE USUARIO*/
 import { Signin } from './componentes/usuarios/signin/signin';
 import { Signup } from './componentes/usuarios/signup/signup';
 import { Recuperar } from './componentes/usuarios/recuperar/recuperar';
 import { ResetPassword } from './componentes/usuarios/reset-password/reset-password';
 
-//COSAS DE PRODUCTOS
+/*COSAS DE PRODUCTOS*/
 import { ListadoProductos } from './componentes/productos/listado-productos/listado-productos';
 import { DetalleProducto } from './componentes/productos/detalle-producto/detalle-producto';
 import { NuevoProducto } from './componentes/productos/nuevo-producto/nuevo-producto';

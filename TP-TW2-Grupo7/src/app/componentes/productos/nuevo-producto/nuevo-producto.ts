@@ -56,7 +56,7 @@ export class NuevoProducto implements OnInit {
     this.form.markAllAsTouched();
 
     if (this.form.invalid) {
-      this.mensaje = '⚠️ Complete todos los campos correctamente';
+      this.mensaje = 'Complete todos los campos correctamente';
       this.tipoMensaje = 'warning';
       return;
     }
@@ -65,7 +65,7 @@ export class NuevoProducto implements OnInit {
 
     this.productosService.crearProducto(nuevoProducto).subscribe({
       next: () => {
-        this.mensaje = '✅ Producto agregado con éxito';
+        this.mensaje = 'Producto agregado con éxito';
         this.tipoMensaje = 'success';
 
         setTimeout(() => {
@@ -74,7 +74,7 @@ export class NuevoProducto implements OnInit {
       },
       error: (err) => {
         console.error('Error al crear el producto:', err);
-        this.mensaje = '❌ Error al guardar el producto. Verifique los datos o intente más tarde.';
+        this.mensaje = 'Error al guardar el producto. Verifique los datos o intente más tarde.';
         this.tipoMensaje = 'error';
       }
     });

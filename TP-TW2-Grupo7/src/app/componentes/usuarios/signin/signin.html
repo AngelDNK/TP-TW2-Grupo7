@@ -3,7 +3,7 @@
     <h3 class="text-2xl font-bold text-center mb-6">Iniciar sesión</h3>
 
     <form [formGroup]="form" (ngSubmit)="login()" class="space-y-4">
-      <!-- Email -->
+      
       <div class="flex flex-col">
         <label class="mb-1 text-gray-700 font-medium">Email</label>
         <div class="relative">
@@ -18,7 +18,7 @@
         </div>
       </div>
 
-      <!-- Contraseña -->
+      
       <div class="flex flex-col">
         <label class="mb-1 text-gray-700 font-medium">Contraseña</label>
         <div class="relative">
@@ -33,21 +33,21 @@
         </div>
       </div>
 
-      <!-- Botón -->
+      
       <button type="submit"
               [disabled]="form.invalid || isLoading"
               class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50">
         {{ isLoading ? 'Ingresando...' : 'Ingresar' }}
       </button>
 
-      <!-- Enlaces -->
+      
       <div class="flex flex-col items-center space-y-2 mt-3">
         <a routerLink="/recuperar" class="text-sm text-blue-600 hover:underline">¿Olvidaste tu contraseña?</a>
         <a routerLink="/signup" class="text-sm text-blue-600 hover:underline">¿No tenés una cuenta? Registrate</a>
       </div>
     </form>
 
-    <!-- Mensaje de estado -->
+    
     <div *ngIf="mensaje" class="mt-4">
       <div [ngClass]="{
             'bg-green-100 text-green-800': tipoMensaje === 'success',

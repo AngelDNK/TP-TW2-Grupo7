@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FilterService } from './filter.service';
+import { environment } from '../../environments/environment';
 
-// URL base del backend
-const API_URL = 'http://localhost:3000/api/auth';
+const API_URL = `${environment.apiUrl}/auth`;
 
 const USER_KEY = 'usuario';
 const TOKEN_KEY = 'auth_token';
@@ -34,7 +34,7 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${API_URL}/signin`, data);
   }
 
-  signup(data: { nombre: string; apellido: string; direccion: string; email: string; password: string }): Observable<AuthResponse> {
+  signup(data: any): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${API_URL}/signup`, data);
   }
 
@@ -47,40 +47,29 @@ export class AuthService {
   }
 
   guardarSesion(response: AuthResponse): void {
-    if (typeof window === 'undefined') return;
-
-    if (response.user) {
-      localStorage.setItem(USER_KEY, JSON.stringify(response.user));
-    }
-    if (response.token) {
-      localStorage.setItem(TOKEN_KEY, response.token);
-    }
+    if (!response) return;
+    if (response.user) localStorage.setItem(USER_KEY, JSON.stringify(response.user));
+    if (response.token) localStorage.setItem(TOKEN_KEY, response.token);
   }
 
   obtenerToken(): string | null {
-    if (typeof window === 'undefined') return null;
     return localStorage.getItem(TOKEN_KEY);
   }
 
   obtenerUsuarioLogueado(): User | null {
-    if (typeof window === 'undefined') return null;
-
-    const usuarioStorage = localStorage.getItem(USER_KEY);
-    return usuarioStorage ? (JSON.parse(usuarioStorage) as User) : null;
+    const data = localStorage.getItem(USER_KEY);
+    return data ? JSON.parse(data) : null;
   }
 
   esAdmin(): boolean {
-    const usuario = this.obtenerUsuarioLogueado();
-    return usuario ? usuario.rol === 'admin' : false;
+    return this.obtenerUsuarioLogueado()?.rol === 'admin';
   }
 
   esCliente(): boolean {
-    const usuario = this.obtenerUsuarioLogueado();
-    return usuario ? usuario.rol === 'cliente' : false;
+    return this.obtenerUsuarioLogueado()?.rol === 'cliente';
   }
 
   logout(): void {
-    if (typeof window === 'undefined') return;
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(TOKEN_KEY);
     this.filterService.limpiarFiltros();

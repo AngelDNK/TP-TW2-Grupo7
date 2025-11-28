@@ -3,13 +3,14 @@ import jwt from 'jsonwebtoken';
 
 export interface RequestConUsuario extends Request {
   usuario_id?: number;
+  rol?: string;
 }
 
 export const verificarToken = (req: Request, res: Response, next: NextFunction) => {
   const reqConUsuario = req as RequestConUsuario;
-  
+
   const authHeader = reqConUsuario.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; 
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
     return res.status(401).json({ message: 'Acceso denegado. No se proporcionó token.' });
@@ -21,14 +22,25 @@ export const verificarToken = (req: Request, res: Response, next: NextFunction) 
       console.error('JWT_SECRET no está definida en .env');
       throw new Error('Error de configuración del servidor');
     }
-    
+
     const payload = jwt.verify(token, jwtSecret) as { id: number, rol: string };
-    
+
     reqConUsuario.usuario_id = payload.id;
-    
-    next(); 
+    reqConUsuario.rol = payload.rol;
+
+    next();
   } catch (error) {
     console.error('Error al verificar token:', error);
     res.status(403).json({ message: 'Token inválido o expirado' });
+  }
+};
+
+export const esAdmin = (req: Request, res: Response, next: NextFunction) => {
+  const reqConUsuario = req as RequestConUsuario;
+
+  if (reqConUsuario.rol === 'admin') {
+    next(); 
+  } else {
+    return res.status(403).json({ message: 'Acceso denegado: Se requiere rol de Administrador' });
   }
 };

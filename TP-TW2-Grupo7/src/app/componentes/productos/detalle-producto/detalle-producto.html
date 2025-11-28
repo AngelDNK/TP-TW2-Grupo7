@@ -55,12 +55,12 @@
       </div>
 
       <div class="space-y-4">
-        <a *ngIf="authService.esAdmin()" [routerLink]="['/editar-producto', producto.id]"
+        <a *ngIf="authService.esAdmin$ | async" [routerLink]="['/editar-producto', producto.id]"
           class="w-full text-center bg-yellow-500 text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-yellow-600 transition-colors text-lg inline-block">
           Editar Producto
         </a>
 
-        <button *ngIf="authService.esCliente()"
+        <button *ngIf="authService.esCliente$ | async"
           class="w-full text-center bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition-colors"
           (click)="agregarAlCarrito(producto)">
           Agregar al carrito

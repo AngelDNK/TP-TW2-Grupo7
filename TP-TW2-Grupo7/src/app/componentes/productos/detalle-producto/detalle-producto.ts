@@ -6,6 +6,7 @@ import { Producto } from '../../../modelos/producto';
 import { CarritoService } from '../../../servicios/carrito';
 import { AuthService } from '../../../servicios/auth';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -22,10 +23,11 @@ export class DetalleProducto implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productosService: ProductosService,
-    public authService: AuthService,
+    protected authService: AuthService,
     private carritoService: CarritoService,
     private toastr: ToastrService
-  ) { }
+  ) { 
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {

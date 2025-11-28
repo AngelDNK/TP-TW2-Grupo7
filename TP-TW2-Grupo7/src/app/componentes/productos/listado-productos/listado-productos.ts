@@ -8,6 +8,7 @@ import { AuthService } from '../../../servicios/auth';
 import { CarritoService } from '../../../servicios/carrito';
 import { FilterService, Filtros } from '../../../servicios/filter.service';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-listado-productos',
@@ -26,18 +27,22 @@ export class ListadoProductos implements OnInit {
   categoriaSeleccionada = '';
   precioMax = 0;
 
+  esAdmin$: Observable<boolean>;
+  esCliente$: Observable<boolean>;
+
   constructor(
     private productosService: ProductosService,
-    public authService: AuthService,
+    private authService: AuthService,
     private carritoService: CarritoService,
     private filterService: FilterService,
     private toastr: ToastrService
-  ) { }
-
+  ) {
+    this.esAdmin$ = this.authService.esAdmin$;
+    this.esCliente$ = this.authService.esCliente$;
+  }
 
   ngOnInit(): void {
     this.cargarCategorias();
-
     this.filterService.filtros$.subscribe((filtros) => {
       this.search = filtros.search;
       this.categoriaSeleccionada = filtros.categoria;

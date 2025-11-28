@@ -6,6 +6,7 @@ import { Producto } from '../../../modelos/producto';
 import { CarritoService } from '../../../servicios/carrito';
 import { AuthService } from '../../../servicios/auth';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -19,13 +20,19 @@ export class DetalleProducto implements OnInit {
   isLoading: boolean = true;
   errorMensaje: string = '';
 
+  esAdmin$: Observable<boolean>;
+  esCliente$: Observable<boolean>;
+
   constructor(
     private route: ActivatedRoute,
     private productosService: ProductosService,
-    public authService: AuthService,
+    private authService: AuthService,
     private carritoService: CarritoService,
     private toastr: ToastrService
-  ) { }
+  ) {
+    this.esAdmin$ = this.authService.esAdmin$;
+    this.esCliente$ = this.authService.esCliente$;
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {

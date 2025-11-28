@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'; // Ya no necesitas OnInit ni NavigationEnd
+import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './servicios/auth';
@@ -22,12 +22,12 @@ import { Observable } from 'rxjs';
             
             <ng-container *ngIf="(estaLogueado$ | async); else noLogueadoDesktop">
             
-              <a *ngIf="authService.esCliente$ | async" routerLink="/pedidos"
+              <a *ngIf="esCliente$ | async" routerLink="/pedidos"
                  class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer">
                 Mis pedidos
               </a>
 
-              <a *ngIf="authService.esCliente$ | async"
+              <a *ngIf="esCliente$ | async"
                  routerLink="/carrito"
                  class="text-gray-300 hover:text-white relative mx-3"
                  title="Ver carrito">
@@ -79,12 +79,12 @@ import { Observable } from 'rxjs';
           <ng-container *ngIf="(estaLogueado$ | async); else noLogueadoMobile">
 
             <div class="px-2 pb-2 space-y-2">
-                <a *ngIf="authService.esCliente$ | async" routerLink="/pedidos"
+                <a *ngIf="esCliente$ | async" routerLink="/pedidos"
                 class="w-full flex items-center justify-between text-gray-200 bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded-md text-sm font-medium mt-2">
                 Mis pedidos
                 </a>
 
-              <a *ngIf="authService.esCliente$ | async"
+              <a *ngIf="esCliente$ | async"
                  routerLink="/carrito"
                  (click)="closeMenu()"
                  class="w-full flex items-center justify-between text-gray-200 bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-md text-sm font-medium">
@@ -147,7 +147,7 @@ export class App {
   isMenuOpen = false;
 
   constructor(
-    public authService: AuthService,
+    private authService: AuthService,
     private router: Router,
     public searchService: SearchService,
     private carritoService: CarritoService

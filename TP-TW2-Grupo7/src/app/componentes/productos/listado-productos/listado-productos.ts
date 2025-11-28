@@ -27,13 +27,18 @@ export class ListadoProductos implements OnInit {
   categoriaSeleccionada = '';
   precioMax = 0;
 
+  esAdmin$: Observable<boolean>;
+  esCliente$: Observable<boolean>;
+
   constructor(
     private productosService: ProductosService,
-    protected authService: AuthService,
+    private authService: AuthService,
     private carritoService: CarritoService,
     private filterService: FilterService,
     private toastr: ToastrService
   ) {
+    this.esAdmin$ = this.authService.esAdmin$;
+    this.esCliente$ = this.authService.esCliente$;
   }
 
   ngOnInit(): void {
